@@ -1,0 +1,43 @@
+.TH SHELLBY 1 "November 2018" "Holberton School" "0x15. C - Simple Shell"
+.SH NAME
+.B shellby\fR \- simple UNIX command interpreter
+.SH SYNOPSIS
+.B shellby\fR
+.SH DESCRIPTION
+.B Shellby\fR is a simple UNIX command language interpreter that executes commands read from standard input.
+.PP
+.B Invocation
+.PP
+If \fBshellby\fR is invoked with arguments, the first argument is assumed to be a string containing arguments.
+.B Shellby\fR tokenizes and executes commands from this string, then exits with the status of the last command executed.
+.PP
+If \fBshellby\fR is invoked without arguments, an \fIinteractive\fR shell is opened.
+When executing interactively, \fBshellby\fR displays the prompt \fI$ \fR when it is ready to read a command.
+.PP
+.B Command Execution
+.PP
+After receiving a command, \fBshellby\fR tokenizes it into words and takes the following actions:
+.RS
+If the command name contains no slashes, the shell searches for it in the list of shell builtins.
+If there exists a shell builtin by that name, the builtin is invoked.
+.PP
+If the command name is not a builtin, \fBshellby\fR searches each element of the 
+\fBPATH\fR environmental variable for a directory containing an executable file by that name.
+.PP
+If either of the above searches is successful, the shell executes the named program with any remaining arguments given in a separate execution environment.
+.RE
+.PP
+.B Exit Status
+.PP
+.B Shellby\fR returns the exit status of the last command executed, unless a syntax error occurs, in which case it exits with a non-zero value.
+.PP
+.B Shellby Builtin Commands
+.PP
+.SH SEE ALSO
+execve(2), exit(3), fork(2), stat(2), sh(1), wait(2)
+.PP
+.B Shellby\fR emulates basic functionality of the \fBsh\fR shell.
+This man page borrows from the corresponding man page sh(1).
+.SH AUTHOR
+Alex Yu and Brennan D Baraban
+

@@ -72,11 +72,20 @@ list_t *get_path_dir(char *path)
 {
 	int index;
 	char **dirs;
-	list_t *head = NULL;
+	char *path_copy;
 
-	dirs = _strtok(path, ":");
-	if (!dirs)
+	list_t *head = NULL;
+	path_copy = malloc(strlen(path) + 1);
+	if (!path_copy)
 		return (NULL);
+	strcpy(path_copy, path);
+
+	dirs = _strtok(path_copy, ":");
+	if (!dirs)
+	{
+		free(path_copy);
+		return (NULL);
+	}
 	for (index = 0; dirs[index]; index++)
 	{
 		if (add_node_end(&head, dirs[index]) == NULL)
@@ -86,6 +95,7 @@ list_t *get_path_dir(char *path)
 			return (NULL);
 		}
 	}
+	free(path_copy);
 	free(dirs);
 	return (head);
 }

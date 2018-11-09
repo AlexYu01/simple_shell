@@ -10,8 +10,6 @@ char *_getenv(const char *name);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 
-extern char **environ;
-
 /**
  * _getenv - Gets an environmental variable from the PATH.
  * @name: The name of the environmental variable to get.
@@ -47,7 +45,7 @@ int _setenv(const char *name, const char *value, int overwrite)
 	char *env_var;
 	char **new_environ;
 	size_t size;
-	int index, index2;
+	int index;
 	size_t len_name = strlen(name);
 	size_t len_value = strlen(value);
 	char *new_value;
@@ -55,12 +53,9 @@ int _setenv(const char *name, const char *value, int overwrite)
 	env_var = _getenv(name);
 
 	new_value = malloc(len_name + 1 + len_value + 1);
-	for (index = 0; name[index]; index++)
-		new_value[index] = name[index];
-	new_value[index++] = '=';
-	for (index2 = 0; value[index2]; index++, index2++)
-		new_value[index] = value[index2];
-	new_value[index] = '\0';
+	strcpy(new_value, name);
+	strcat(new_value, "=");
+	strcat(new_value, value);
 
 	for (size = 0; environ[size]; size++)
 		;

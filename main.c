@@ -25,13 +25,20 @@ int main(void)
 	{
 		printf("$ ");
 		n = 0;
-		if ((read = getline(&line, &n, stdin)) == -1)
+		read = getline(&line, &n, stdin);
+		if (read == -1)
 		{
 			printf("read failed\n");
 			return (1);
 		}
 		argv = _strtok(line, " ");
+		if (!argv)
+		{
+			perror("Failed to tokenize\n");
+			continue;
+		}
 		if (argv[0][0] != '/')
+			/* TODO handle NULL case? */
 			argv[0] = get_location(argv[0]);
 		child_pid = fork();
 		if (child_pid == -1)

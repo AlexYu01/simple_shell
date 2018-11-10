@@ -10,6 +10,15 @@ int execute(char **argv, char *name, int hist);
 char **get_args(char **argv);
 int run_args(char **argv, char *name, int *hist);
 
+/**
+ * execute - Executes a command in a child process.
+ * @argv: An array of arguments.
+ * @name: The name of the call.
+ * @hist: The history number of the call.
+ *
+ * Return: If an error occurs - a corresponding error code.
+ *         O/w - The exit value of the last executed command.
+ */
 int execute(char **argv, char *name, int hist)
 {
 	pid_t child_pid;
@@ -33,7 +42,7 @@ int execute(char **argv, char *name, int hist)
 	if (child_pid == 0)
 	{
 		if (!command || (access(command, F_OK) == -1))
-			return(create_error(name, hist, argv[0], 127));
+			return (create_error(name, hist, argv[0], 127));
 		if (access(command, X_OK) == -1)
 			return (create_error(name, hist, argv[0], 126));
 		if (execve(command, argv, NULL) == -1)
@@ -50,6 +59,14 @@ int execute(char **argv, char *name, int hist)
 	return (ret);
 }
 
+
+/**
+ * get_args - Reads and tokenizes arguments from the command line.
+ * @argv: An array to store the tokenized arguments.
+ *
+ * Return: If an error occurs - NULL.
+ *         O/w - the tokenized array of arguments.
+ */
 char **get_args(char **argv)
 {
 	size_t n = 0;
@@ -69,6 +86,15 @@ char **get_args(char **argv)
 	return (argv);
 }
 
+/**
+ * run_args - Calls the execution of a command.
+ * @argv: An array of arguments.
+ * @name: The name of the call.
+ * @hist: The history number of the call.
+ *
+ * Return: If an error occurs - -1.
+ *         O/w - the exit value of the last executed command.
+ */
 int run_args(char **argv, char *name, int *hist)
 {
 	int ret, index;
@@ -91,6 +117,8 @@ int run_args(char **argv, char *name, int *hist)
 
 /**
  * main - Runs a simple UNIX command interpreter.
+ * @argc: The number of arguments supplied to the program.
+ * @argv: An array of pointers to the arguments.
  *
  * Return: Always 0.
  */

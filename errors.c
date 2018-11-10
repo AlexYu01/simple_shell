@@ -1,5 +1,15 @@
 #include "shell.h"
 
+int num_len(int num);
+char *_itoa(int num);
+int create_error(char *name, int hist, char *command, int err);
+
+/**
+ * num_len - Counts the digit length of a number.
+ * @num: The number to measure.
+ *
+ * Return: The digit length.
+ */
 int num_len(int num)
 {
 	int len = 1;
@@ -13,6 +23,12 @@ int num_len(int num)
 	return (len);
 }
 
+/**
+ * _itoa - Converts an integer to a string.
+ * @num: The integer.
+ *
+ * Return: The converted string.
+ */
 char *_itoa(int num)
 {
 	char *buffer;
@@ -35,6 +51,16 @@ char *_itoa(int num)
 	return (buffer);
 }
 
+
+/**
+ * create_error - Writes a custom error message to stderr.
+ * @name: The name of the call causing the error.
+ * @hist: The history number of the call.
+ * @command: The command causing the error.
+ * @err: The error value.
+ *
+ * Return: The error value.
+ */
 int create_error(char *name, int hist, char *command, int err)
 {
 	char *error, *hist_str;

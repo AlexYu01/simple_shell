@@ -36,10 +36,9 @@ list_t *add_node_end(list_t **head, char *dir)
 			last = last->next;
 		last->next = new_node;
 	}
+
 	else
-	{
 		*head = new_node;
-	}
 
 	return (new_node);
 }
@@ -71,13 +70,13 @@ void free_list(list_t *head)
 list_t *get_path_dir(char *path)
 {
 	int index;
-	char **dirs;
-	char *path_copy;
-
+	char **dirs, *path_copy;
 	list_t *head = NULL;
+
 	path_copy = malloc(strlen(path) + 1);
 	if (!path_copy)
 		return (NULL);
+
 	strcpy(path_copy, path);
 
 	dirs = _strtok(path_copy, ":");
@@ -86,6 +85,7 @@ list_t *get_path_dir(char *path)
 		free(path_copy);
 		return (NULL);
 	}
+
 	for (index = 0; dirs[index]; index++)
 	{
 		if (add_node_end(&head, dirs[index]) == NULL)
@@ -95,7 +95,9 @@ list_t *get_path_dir(char *path)
 			return (NULL);
 		}
 	}
+
 	free(path_copy);
 	free(dirs);
+
 	return (head);
 }

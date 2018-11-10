@@ -25,22 +25,28 @@ char *get_location(char *command)
 
 	dirs = get_path_dir(path + 5);
 	head = dirs;
+
 	while (dirs)
 	{
-		temp = malloc(strlen(dirs->dir) + 1 + strlen(command) + 1);
+		temp = malloc(strlen(dirs->dir) + strlen(command) + 2);
 		if (!temp)
 			return (NULL);
+
 		strcpy(temp, dirs->dir);
 		strcat(temp, "/");
 		strcat(temp, command);
+
 		if (stat(temp, &st) == 0)
 		{
 			free_list(head);
 			return (temp);
 		}
+
 		dirs = dirs->next;
 		free(temp);
 	}
+
 	free_list(head);
+
 	return (NULL);
 }

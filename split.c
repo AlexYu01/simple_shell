@@ -15,8 +15,7 @@
  */
 char **_strtok(char *line, char *delim)
 {
-	char *token;
-	char **ptr;
+	char *token, **ptr;
 	int index;
 	size_t words = 0;
 
@@ -34,7 +33,9 @@ char **_strtok(char *line, char *delim)
 	ptr = malloc(sizeof(char *) * (words + 1));
 	if (!ptr)
 		return (NULL);
+
 	token = strtok(line, delim);
+
 	for (index = 0; token != NULL; index++)
 	{
 		ptr[index] = malloc(strlen(token) + 1);

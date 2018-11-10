@@ -19,8 +19,7 @@ int _unsetenv(const char *name);
  */
 char *_getenv(const char *name)
 {
-	int index;
-	int len;
+	int index, len;
 
 	len = strlen(name);
 	for (index = 0; environ[index]; index++)
@@ -42,13 +41,10 @@ char *_getenv(const char *name)
  */
 int _setenv(const char *name, const char *value, int overwrite)
 {
-	char *env_var;
-	char **new_environ;
+	char *env_var, **new_environ, *new_value;
 	size_t size;
 	int index;
-	size_t len_name = strlen(name);
-	size_t len_value = strlen(value);
-	char *new_value;
+	size_t len_name = strlen(name), len_value = strlen(value);
 
 	env_var = _getenv(name);
 
@@ -83,15 +79,19 @@ int _setenv(const char *name, const char *value, int overwrite)
 		}
 		strcpy(new_environ[index], environ[index]);
 	}
+
 	environ = new_environ;
 	env_var = _getenv(name);
+
 	if (env_var && overwrite)
 	{
 		env_var = new_value;
 		return (0);
 	}
+
 	environ[index] = new_value;
 	environ[index + 1] = NULL;
+
 	return (0);
 }
 
@@ -104,8 +104,7 @@ int _setenv(const char *name, const char *value, int overwrite)
  */
 int _unsetenv(const char *name)
 {
-	char *env_var;
-	char **new_environ;
+	char *env_var, **new_environ;
 	size_t size;
 	int index, index2;
 
@@ -124,6 +123,7 @@ int _unsetenv(const char *name)
 	{
 		if (env_var == environ[index])
 			continue;
+
 		new_environ[index2] = malloc(strlen(environ[index] + 1));
 		if (!new_environ[index2])
 		{
@@ -132,10 +132,13 @@ int _unsetenv(const char *name)
 			free(new_environ);
 			return (-1);
 		}
+
 		strcpy(new_environ[index2], environ[index]);
 		index2++;
 	}
+
 	environ = new_environ;
 	environ[size - 1] = NULL;
+
 	return (0);
 }

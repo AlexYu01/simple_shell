@@ -9,7 +9,7 @@
 
 void sig_handler(int sig);
 int execute(char **argv, char *name, int hist);
-char **get_args(char **argv);
+int get_args(char **argv);
 int run_args(char **argv, char *name, int *hist);
 
 /**
@@ -82,7 +82,6 @@ int execute(char **argv, char *name, int hist)
 	return (ret);
 }
 
-
 /**
  * get_args - Reads and tokenizes arguments from the command line.
  * @argv: An array to store the tokenized arguments.
@@ -90,11 +89,12 @@ int execute(char **argv, char *name, int hist)
  * Return: If an error occurs - NULL.
  *         O/w - the tokenized array of arguments.
  */
-char **get_args(char **argv)
+int get_args(char **argv)
 {
 	size_t n = 0;
 	ssize_t read;
-	char *line = NULL;
+	char *line = NULL, **args;
+	int index;
 
 	read = getline(&line, &n, stdin);
 	if (read == -1 || read == 1)
@@ -106,15 +106,21 @@ char **get_args(char **argv)
 		return (get_args(argv));
 	}
 	if (read == -1)
+		return (-2);
+
+	args = _strtok(line, " ");
+	if (!args)
 	{
-		printf("\n");
-		exit(0);
+		perror("Failed to tokenize");
+		return (-1);
 	}
 
-	argv = _strtok(line, " ");
+	for (index = 0; args[index]; index++)
+		argv[index] = args[index];
 
 	free(line);
-	return (argv);
+	free(args);
+	return (0);
 }
 
 /**
@@ -131,12 +137,11 @@ int run_args(char **argv, char *name, int *hist)
 	int ret, index;
 	int (*builtin)(char **argv);
 
-	argv = get_args(argv);
-	if (!argv)
-	{
-		perror("Failed to tokenize\n");
+	ret = get_args(argv);
+	if (ret == -1)
 		return (-1);
-	}
+	if (ret == -2)
+		return (-2);
 
 	builtin = get_builtin(argv[0]);
 	if (builtin)
@@ -152,7 +157,6 @@ int run_args(char **argv, char *name, int *hist)
 
 	for (index = 0; argv[index]; index++)
 		free(argv[index]);
-	free(argv);
 
 	return (ret);
 }
@@ -166,7 +170,7 @@ int run_args(char **argv, char *name, int *hist)
  */
 int main(int argc, char *argv[])
 {
-	int ret, hist = 1;
+	int ret = 0, hist = 1;
 	char *name = argv[0];
 
 	signal(SIGINT, sig_handler);
@@ -176,14 +180,24 @@ int main(int argc, char *argv[])
 
 	if (!isatty(STDIN_FILENO))
 	{
-		while (ret != -1)
+		while (ret == 0)
+		{
 			ret = run_args(argv, name, &hist);
+			if (ret == -2)
+				return (0);
+		}
+		return (ret);
 	}
 
 	while (1)
 	{
 		printf("$ ");
 		ret = run_args(argv, name, &hist);
+		if (ret == -2)
+		{
+			printf("\n");
+			exit(0);
+		}
 	}
 
 	return (ret);

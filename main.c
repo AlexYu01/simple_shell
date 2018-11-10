@@ -5,11 +5,25 @@
  */
 
 #include "shell.h"
-       #include <errno.h>
+#include <errno.h>
 
+void sig_handler(int sig);
 int execute(char **argv, char *name, int hist);
 char **get_args(char **argv);
 int run_args(char **argv, char *name, int *hist);
+
+/**
+ * sig_handler - Prints a new prompt upon a signal.
+ * @sig: The signal.
+ */
+void sig_handler(int sig)
+{
+	char *new_prompt = "\n$ ";
+
+	(void)sig;
+	signal(SIGINT, sig_handler);
+	write(STDIN_FILENO, new_prompt, 3);
+}
 
 /**
  * execute - Executes a command in a child process.
@@ -83,8 +97,10 @@ char **get_args(char **argv)
 	char *line = NULL;
 
 	read = getline(&line, &n, stdin);
-	if (read == -1)
+	if (read == -1 || read == 1)
 	{
+		if (read == -1)
+			perror("Failed to tokenize\n");
 		free(line);
 		return (NULL);
 	}
@@ -117,7 +133,7 @@ int run_args(char **argv, char *name, int *hist)
 	if (builtin)
 	{
 		ret = builtin(argv);
-		if(ret)
+		if (ret)
 			create_error(name, *hist, argv, ret);
 	}
 	else
@@ -145,6 +161,8 @@ int main(int argc, char *argv[])
 	int ret, hist = 1;
 	char *name = argv[0];
 
+	signal(SIGINT, sig_handler);
+
 	if (argc != 1)
 		return (execute(argv + 1, name, hist));
 
@@ -159,8 +177,7 @@ int main(int argc, char *argv[])
 	{
 		printf("$ ");
 		ret = run_args(argv, name, &hist);
-		if (ret == -1)
-			perror("Failed to tokenize\n");
 	}
+
 	return (ret);
 }

@@ -6,13 +6,14 @@
 
 #include "shell.h"
 
-int execute(char **argv);
+int execute(char **argv, char *name, int hist);
 char **clear_input(char **argv);
 
-int execute(char **argv)
+int execute(char **argv, char *name, int hist)
 {
 	pid_t child_pid;
-	int status, flag = 0;
+	int status, flag = 0, ret;
+	char *command = argv[0];
 
 	if (argv[0][0] != '/')
 	{
@@ -31,16 +32,21 @@ int execute(char **argv)
 	if (child_pid == 0)
 	{
 		if (execve(argv[0], argv, NULL) == -1)
-			perror("Error exec gone wrong:");
+		{
+			create_error(name, hist, command, 1);
+			return (127);
+		}
+			
 	}
 	else
 	{
 		wait(&status);
+		ret = WEXITSTATUS(status);
 	}
 
 	if (flag)
 		free(argv[0]);
-	return (0);
+	return (ret);
 }
 
 char **clear_input(char **argv)
@@ -69,13 +75,14 @@ char **clear_input(char **argv)
  */
 int main(int argc, char *argv[])
 {
-	int ret;
+	int ret, hist = 1;
 	size_t n, index;
 	ssize_t read;
-	char *line, *command;
+	char *name, *line, *command;
 
+	name = argv[0];
 	if (argc != 1)
-		return (execute(argv + 1));
+		return (execute(argv + 1, name, hist));
 
 	if (!isatty(STDIN_FILENO))
 	{
@@ -83,7 +90,8 @@ int main(int argc, char *argv[])
 		while (argv)
 		{
 			command = argv[0];
-			ret = execute(argv);
+			ret = execute(argv, name, hist);
+			hist++;
 			for (index = 1; argv[index]; index++)
 				free(argv[index]);
 			free(argv);
@@ -92,7 +100,7 @@ int main(int argc, char *argv[])
 			argv = clear_input(argv);
 		}
 		free(argv);
-		return (0);
+		return (ret);
 	}
 
 	line = NULL;
@@ -114,14 +122,14 @@ int main(int argc, char *argv[])
 		}
 
 		command = argv[0];
-		ret = execute(argv);
-
+		ret = execute(argv, name, hist);
+		hist++;
 		for (index = 1; argv[index]; index++)
 			free(argv[index]);
 		free(argv);
 		free(line);
 		free(command);
-		return (0);
+		return (ret);
 	}
 	return (ret);
 }

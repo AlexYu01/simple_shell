@@ -8,6 +8,7 @@
 
 int execute(char **argv, char *name, int hist);
 char **get_args(char **argv);
+int run_args(char **argv, char *name, int *hist);
 
 int execute(char **argv, char *name, int hist)
 {
@@ -67,6 +68,26 @@ char **get_args(char **argv)
 	return (argv);
 }
 
+int run_args(char **argv, char *name, int *hist)
+{
+	int ret, index;
+
+	argv = get_args(argv);
+	if (!argv)
+		return (-1);
+
+	ret = execute(argv, name, *hist);
+
+	(*hist)++;
+
+	for (index = 0; argv[index]; index++)
+		free(argv[index]);
+	free(argv);
+	argv = NULL;
+
+	return (ret);
+}
+
 /**
  * main - Runs a simple UNIX command interpreter.
  *
@@ -75,46 +96,24 @@ char **get_args(char **argv)
 int main(int argc, char *argv[])
 {
 	int ret, hist = 1;
-	size_t index;
-	char *name;
+	char *name = argv[0];
 
-	name = argv[0];
 	if (argc != 1)
 		return (execute(argv + 1, name, hist));
 
 	if (!isatty(STDIN_FILENO))
 	{
-		argv = get_args(argv);
-		while (argv)
-		{
-			ret = execute(argv, name, hist);
-			hist++;
-			for (index = 0; argv[index]; index++)
-				free(argv[index]);
-			free(argv);
-			argv = NULL;
-			argv = get_args(argv);
-		}
-		free(argv);
-		return (ret);
+		while (ret != -1)
+			ret = run_args(argv, name, &hist);
+		return (0);
 	}
 
 	while (1)
 	{
 		printf("$ ");
-		argv = get_args(argv);
-		if (!argv)
-		{
+		ret = run_args(argv, name, &hist);
+		if (ret == -1)
 			perror("Failed to tokenize\n");
-			continue;
-		}
-
-		ret = execute(argv, name, hist);
-		hist++;
-		for (index = 0; argv[index]; index++)
-			free(argv[index]);
-		free(argv);
-		return (ret);
 	}
 	return (ret);
 }

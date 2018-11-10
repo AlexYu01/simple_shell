@@ -22,7 +22,7 @@ char *get_location(char *command)
 	path = _getenv("PATH");
 	if (!path)
 		return (NULL);
-	
+
 	dirs = get_path_dir(path + 5);
 	head = dirs;
 	while (dirs)

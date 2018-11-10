@@ -1,4 +1,13 @@
+/*
+ * File: errors.c
+ * Auth: Alex Yu
+ *       Brennan D Baraban
+ */
+
 #include "shell.h"
+
+int num_len(int num);
+char *_itoa(int num);
 
 /**
  * num_len - Counts the digit length of a number.
@@ -52,25 +61,25 @@ char *_itoa(int num)
  * create_error - Writes a custom error message to stderr.
  * @name: The name of the call causing the error.
  * @hist: The history number of the call.
- * @command: The command causing the error.
+ * @args: An array of arguments.
  * @err: The error value.
  *
  * Return: The error value.
  */
-int create_error(char *name, int hist, char **argv, int err)
+int create_error(char *name, int hist, char **args, int err)
 {
 	char *error;
 
 	switch (err)
 	{
 		case 2:
-			error = error_2(name, hist, argv);
+			error = error_2(name, hist, args);
 			break;
 		case 126:
-			error = error_126(name, hist, argv);
+			error = error_126(name, hist, args);
 			break;
 		case 127:
-			error = error_127(name, hist, argv);
+			error = error_127(name, hist, args);
 			break;
 	}
 	write(STDERR_FILENO, error, strlen(error));

@@ -98,11 +98,17 @@ char **get_args(char **argv)
 
 	read = getline(&line, &n, stdin);
 	if (read == -1 || read == 1)
-	{
-		if (read == -1)
-			perror("Failed to tokenize\n");
 		free(line);
-		return (NULL);
+
+	if (read == 1)
+	{
+		printf("$ ");
+		return (get_args(argv));
+	}
+	if (read == -1)
+	{
+		printf("\n");
+		exit(0);
 	}
 
 	argv = _strtok(line, " ");
@@ -127,7 +133,10 @@ int run_args(char **argv, char *name, int *hist)
 
 	argv = get_args(argv);
 	if (!argv)
+	{
+		perror("Failed to tokenize\n");
 		return (-1);
+	}
 
 	builtin = get_builtin(argv[0]);
 	if (builtin)
@@ -144,7 +153,6 @@ int run_args(char **argv, char *name, int *hist)
 	for (index = 0; argv[index]; index++)
 		free(argv[index]);
 	free(argv);
-	argv = NULL;
 
 	return (ret);
 }
@@ -170,7 +178,6 @@ int main(int argc, char *argv[])
 	{
 		while (ret != -1)
 			ret = run_args(argv, name, &hist);
-		return (0);
 	}
 
 	while (1)

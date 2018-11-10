@@ -34,6 +34,9 @@ char *get_location(char *command);
 list_t *get_path_dir(char *path);
 list_t *add_node_end(list_t **head, char *dir);
 void free_list(list_t *head);
+int num_len(int num);
+char *_itoa(int num);
+void create_error(char *name, int hist, char *command, int err);
 
 /* Builtins */
 char *_getenv(const char *name);

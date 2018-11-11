@@ -8,6 +8,7 @@
 
 int (*get_builtin(char *command))(char **args);
 int shellby_exit(char **args);
+int shellby_cd(char **args);
 
 /**
  * get_builtin - Matches a command with a corresponding
@@ -21,12 +22,12 @@ int (*get_builtin(char *command))(char **args)
 	builtin_t funcs[] = {
 		{ "exit", shellby_exit },
 
-	/*	{ "env", shellby_env },
-		{ "setenv", shellby_setenv },
-		{ "unsetenv", shellby_unsetenv },
+	//	{ "env", shellby_env },
+	//	{ "setenv", shellby_setenv },
+	//	{ "unsetenv", shellby_unsetenv },
 		{ "cd", shellby_cd },
-		{ "alias", shelly_alias },
-	*/	{ NULL, NULL }
+	//	{ "alias", shelly_alias },
+		{ NULL, NULL }
 	};
 	int i;
 
@@ -74,4 +75,51 @@ int shellby_exit(char **args)
 	free(args);
 	free_env();
 	exit(num * sign);
+}
+
+/**
+ * shellby_cd - Changes the current directory of the shellby process.
+ * @args: An array of arguments.
+ *
+ * Return: If an error occurs - -1.
+ *         Otherwise - 0.
+ */
+int shellby_cd(char **args)
+{
+	char *oldpwd = NULL, *pwd = NULL;
+	struct stat dir;
+
+	oldpwd = getcwd(oldpwd, 0);
+	if (!oldpwd)
+		return (-1);
+
+	if (args[1])
+	{
+		if (*(args[1]) == '-')
+			chdir(_getenv("OLDPWD"));
+		else
+		{
+			if (stat(args[1], &dir) == 0 && S_ISDIR(dir.st_mode))
+				chdir(args[1]);
+			else
+			{
+				free(oldpwd);
+				return (2);
+			}
+		}
+	}
+	else
+		chdir(_getenv("HOME"));
+
+	pwd = getcwd(pwd, 0);
+	if (!pwd)
+		return (-1);
+
+	//_setenv("OLDPWD", oldpwd, 1);
+	//_setenv("PWD", pwd, 1);
+
+	free(oldpwd);
+	free(pwd);
+
+	return (0);
 }

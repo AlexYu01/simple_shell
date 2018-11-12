@@ -23,7 +23,7 @@ char *_itoa(int num)
 		return (NULL);
 
 	buffer[len] = '\0';
-	
+
 	len--;
 	while (len >= 0)
 	{
@@ -35,27 +35,37 @@ char *_itoa(int num)
 	return (buffer);
 }
 
-void create_error(char *name, int hist, char *command, int err)
+int create_error(char *name, int hist, char *command, int err)
 {
 	char *error, *hist_str;
 	int len;
-	
+
 	hist_str = _itoa(hist);
 	if (!hist_str)
-		return;
+		/* TODO return a better error number for number conversion fail */
+		return (err);
 
-	len = strlen(name) + strlen(hist_str) + strlen(command) + 16;
+	len = strlen(name) + strlen(hist_str) + strlen(command) + 6;
+	if (err == 127)
+		len += 10;
+	else
+		len += 18;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
-		return;
+		/* TODO return a better error number for malloc failure */
+		return (err);
 
 	strcpy(error, name);
 	strcat(error, ": ");
 	strcat(error, hist_str);
 	strcat(error, ": ");
 	strcat(error, command);
-	strcat(error, ": not found\n");
+	if (err == 127)
+		strcat(error, ": not found\n");
+	else
+		strcat(error, ": Permission denied\n");
 
 	write(STDERR_FILENO, error, len);
-	(void)err;
+
+	return (err);
 }

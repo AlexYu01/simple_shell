@@ -16,7 +16,7 @@ int execute(char **argv, char *name, int hist)
 	int status, flag = 0, ret;
 	char *command = argv[0];
 
-	if (command[0] != '/')
+	if (command[0] != '/' && command[0] != '.')
 	{
 		flag = 1;
 		command = get_location(command);
@@ -32,11 +32,12 @@ int execute(char **argv, char *name, int hist)
 	}
 	if (child_pid == 0)
 	{
+		if (!command || (access(command, F_OK) == -1))
+			return(create_error(name, hist, argv[0], 127));
+		if (access(command, X_OK) == -1)
+			return (create_error(name, hist, argv[0], 126));
 		if (execve(command, argv, NULL) == -1)
-		{
-			create_error(name, hist, argv[0], 1);
-			return (127);
-		}
+			perror("Error:");
 	}
 	else
 	{

@@ -5,6 +5,7 @@
  */
 
 #include "shell.h"
+       #include <errno.h>
 
 int execute(char **argv, char *name, int hist);
 char **get_args(char **argv);
@@ -42,11 +43,19 @@ int execute(char **argv, char *name, int hist)
 	if (child_pid == 0)
 	{
 		if (!command || (access(command, F_OK) == -1))
-			return (create_error(name, hist, argv[0], 127));
+		{
+			if (errno == EACCES)
+				return (create_error(name, hist, argv[0], 126));
+			else
+				return (create_error(name, hist, argv[0], 127));
+		}
+		/*
 		if (access(command, X_OK) == -1)
 			return (create_error(name, hist, argv[0], 126));
-		if (execve(command, argv, NULL) == -1)
-			perror("Error:");
+		*/
+		execve(command, argv, NULL);
+		if (errno == EACCES)
+			return (create_error(name, hist, argv[0], 126));
 	}
 	else
 	{

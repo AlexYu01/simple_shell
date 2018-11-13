@@ -10,6 +10,40 @@ char *_getenv(const char *name);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 
+
+/**
+ * _copyenv - Creates a copy of the environment.
+ *
+ * Return: Double pointer to the copy of the environment.
+ *	   Or NULL if copy fails.
+ */
+char ** _copyenv(void)
+{
+	char **new_envrion;
+	size_t size;
+	int index;
+
+	for (size=0; environ[size]; size++)
+		;
+
+	new_environ = malloc(sizeof(char *) * (size + 1));
+	if (!new_environ)
+		return (NULL);
+
+	for (index = 0; environ[index]; index++)
+	{
+		new_environ[index] = malloc(strlen(environ[index] + 1));
+		if (!new_environ[index])
+		{
+			for (index--; index >= 0; index--)
+				free(new_environ[index]);
+			free(new_environ);
+			return (NULL);
+		}
+		strcpy(new_environ[index], environ[index]);
+	}
+	return (new_environ);
+}
 /**
  * _getenv - Gets an environmental variable from the PATH.
  * @name: The name of the environmental variable to get.

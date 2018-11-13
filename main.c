@@ -45,9 +45,9 @@ int execute(char **argv, char *name, int hist)
 		if (!command || (access(command, F_OK) == -1))
 		{
 			if (errno == EACCES)
-				return (create_error(name, hist, argv[0], 126));
+				_exit(create_error(name, hist, argv, 126));
 			else
-				return (create_error(name, hist, argv[0], 127));
+				_exit(create_error(name, hist, argv, 127));
 		}
 		/*
 		if (access(command, X_OK) == -1)
@@ -55,7 +55,7 @@ int execute(char **argv, char *name, int hist)
 		*/
 		execve(command, argv, NULL);
 		if (errno == EACCES)
-			return (create_error(name, hist, argv[0], 126));
+			_exit(create_error(name, hist, argv, 126));
 	}
 	else
 	{
@@ -107,12 +107,21 @@ char **get_args(char **argv)
 int run_args(char **argv, char *name, int *hist)
 {
 	int ret, index;
+	int (*builtin)(char **argv);
 
 	argv = get_args(argv);
 	if (!argv)
 		return (-1);
 
-	ret = execute(argv, name, *hist);
+	builtin = get_builtin(argv[0]);
+	if (builtin)
+	{
+		ret = builtin(argv);
+		if(ret)
+			create_error(name, *hist, argv, ret);
+	}
+	else
+		ret = execute(argv, name, *hist);
 
 	(*hist)++;
 

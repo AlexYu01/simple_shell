@@ -106,18 +106,16 @@ int handle_args(char *name, int *hist)
 	}
 	if (read == 1)
 	{
+		if (!(line[0]))
+			printf("$ ");
 		free(line);
-		printf("$ ");
 		return (handle_args(name, hist));
 	}
 
 	args = _strtok(line, " ");
 	free(line);
 	if (!args)
-	{
-		perror("Failed to tokenize");
-		return (-1);
-	}
+		return (0);
 	builtin = get_builtin(args[0]);
 	if (builtin)
 	{

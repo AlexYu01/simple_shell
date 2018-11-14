@@ -67,6 +67,7 @@ char *_itoa(int num);
 int create_error(char *name, int hist, char **args, int err);
 char *error_env(char *name, int hist, char **args);
 char *error_2(char *name, int hist, char **args);
+char *error_2cd(char *name, int hist, char **args);
 char *error_126(char *name, int hist, char **args);
 char *error_127(char *name, int hist, char **args);
 

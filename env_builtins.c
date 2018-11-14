@@ -1,35 +1,49 @@
+/*
+ * File: env_builtins.c
+ * Auth: Alex Yu
+ *       Brennan D Baraban
+ */
+
 #include "shell.h"
 
 char **_get_env(const char *name);
+int shellby_setenv(char **args);
+int shellby_unsetenv(char **args);
+
+char **_get_env(const char *name);
 /**
- * shellby_env - Prints the current environment where each line is a different
- * variable in the format, 'variable'='value'.
- * @args: A double pointer for the args passed to shell.
+ * shellby_env - Prints the current environment.
+ * @args: An array of arguments passed to the shell.
  *
  * Return: If an error occurs - -1.
  *	   Otherwise - 0.
+ *
+ * Description: Prints one variable per line in the
+ *              format 'variable'='value'.
  */
 int shellby_env(char **args)
 {
 	int index;
 	char nc = '\n';
 
-	(void) args;
 	if (!environ)
 		return (-1);
+
 	for (index = 0; environ[index]; index++)
 	{
 		write(STDOUT_FILENO, environ[index], strlen(environ[index]));
 		write(STDOUT_FILENO, &nc, 1);
 	}
+
+	(void)args;
 	return (0);
 }
 
 /**
  * shellby_setenv - Changes or adds an environmental variable to the PATH.
- * @args: A double pointer where args[1] points to the name of the new or
- * existing PATH variable. args[2] points to the value of the to set for the
- * new or PATH variable.
+ * @args: An array of arguments passed to the shell.
+ * Description: args[1] is the name of the new or existing PATH variable.
+ *              args[2] is the value to set the new or changed variable to.
  *
  * Return: If an error occurs - -1.
  *         Otherwise - 0.
@@ -80,7 +94,8 @@ int shellby_setenv(char **args)
 
 /**
  * shellby_unsetenv - Deletes an environmental variable from the PATH.
- * @args: A double pointer where args[1] points to the PATH variable to remove.
+ * @args: An array of arguments passed to the shell.
+ * Description: args[1] is the PATH variable to remove.
  *
  * Return: If an error occurs - -1.
  *         Otherwise - 0.

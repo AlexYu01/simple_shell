@@ -6,12 +6,15 @@
 
 #include "shell.h"
 
+char **_copyenv(void);
+void free_env(void);
+char **_getenv(const char *name);
 
 /**
  * _copyenv - Creates a copy of the environment.
  *
- * Return: Double pointer to the copy of the environment.
- *	   Or NULL if copy fails.
+ * Return: If an error occurs - NULL.
+ *         O/w - a double pointer to the new copy.
  */
 char **_copyenv(void)
 {

@@ -101,19 +101,9 @@ int _setenv(const char *name, const char *value, int overwrite)
 	}
 
 	for (index = 0; environ[index]; index++)
-	{
-		new_environ[index] = malloc(strlen(environ[index] + 1));
-		if (!new_environ[index])
-		{
-			for (index--; index >= 0; index--)
-				free(new_environ[index]);
-			free(new_environ);
-			free(new_value);
-			return (-1);
-		}
-		strcpy(new_environ[index], environ[index]);
-	}
+		new_environ[index] = environ[index];
 
+	free(environ);
 	environ = new_environ;
 	env_var = _getenv(name);
 

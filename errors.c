@@ -72,6 +72,9 @@ int create_error(char *name, int hist, char **args, int err)
 
 	switch (err)
 	{
+		case -1:
+			error = error_env(name, hist, args);
+			break;
 		case 2:
 			error = error_2(name, hist, args);
 			break;

@@ -6,9 +6,42 @@
 
 #include "shell.h"
 
-char *error_2(char *name, int hist, char **args);
-char *error_126(char *name, int hist, char **args);
-char *error_127(char *name, int hist, char **args);
+/**
+ * error_env - Env error....
+ * @name:
+ * @hist:
+ * @args: An array of arguments passed to the command.
+ *
+ * Return: The error string.
+ */
+char *error_env(char *name, int hist, char **args)
+{
+	char *error, *hist_str;
+	int len;
+
+	hist_str = _itoa(hist);
+	if (!hist_str)
+		return (NULL);
+
+	len = strlen(name) + strlen(hist_str) + strlen(args[0]) + 45;
+	error = malloc(sizeof(char) * (len + 1));
+	if (!error)
+	{
+		free(hist_str);
+		return (NULL);
+	}
+
+	strcpy(error, name);
+	strcat(error, ": ");
+	strcat(error, hist_str);
+	strcat(error, ": ");
+	strcat(error, args[0]);
+	strcat(error, ": ");
+	strcat(error, "Unable to add/remove from environment\n");
+
+	free(hist_str);
+	return (error);
+}
 
 /**
  * error_2 - Creates an error message for shellby_exit errors.

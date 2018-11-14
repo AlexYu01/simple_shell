@@ -42,8 +42,7 @@ int shellby_setenv(char **args)
 
 	if (!args[1] || !args[2])
 		return (-1);
-	env_var = _getenv(args[1]);
-/* TODO clean up and fix conditional jump */
+
 	new_value = malloc(strlen(args[1]) + 1 + strlen(args[2]) + 1);
 	if (!new_value)
 		return (-1);
@@ -51,13 +50,17 @@ int shellby_setenv(char **args)
 	strcat(new_value, "=");
 	strcat(new_value, args[2]);
 
+	env_var = _getenv(args[1]);
+	if (env_var)
+	{
+		free(*env_var);
+		*env_var = new_value;
+		return (0);
+	}
 	for (size = 0; environ[size]; size++)
 		;
 
-	if (env_var)
-		new_environ = malloc(sizeof(char *) * (size + 1));
-	else
-		new_environ = malloc(sizeof(char *) * (size + 2));
+	new_environ = malloc(sizeof(char *) * (size + 2));
 	if (!new_environ)
 	{
 		free(new_value);
@@ -69,15 +72,6 @@ int shellby_setenv(char **args)
 
 	free(environ);
 	environ = new_environ;
-	env_var = _getenv(args[1]);
-
-	if (env_var)
-	{
-		free(*env_var);
-		*env_var = new_value;
-		return (0);
-	}
-
 	environ[index] = new_value;
 	environ[index + 1] = NULL;
 

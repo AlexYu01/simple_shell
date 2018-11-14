@@ -53,17 +53,19 @@ int create_error(char *name, int hist, char **args, int err);
 /* Builtins */
 int (*get_builtin(char *command))(char **args);
 int shellby_exit(char **args);
+int shellby_env(char **args);
+int shellby_setenv(char **args);
+int shellby_unsetenv(char **args);
 
 char **_copyenv(void);
 void free_env(void);
-char *_getenv(const char *name);
-int _setenv(const char *name, const char *value, int overwrite);
-int _unsetenv(const char *name);
+char **_getenv(const char *name);
 
 /* Error handling */
 int num_len(int num);
 char *_itoa(int num);
 int create_error(char *name, int hist, char **args, int err);
+char *error_env(char *name, int hist, char **args);
 char *error_2(char *name, int hist, char **args);
 char *error_126(char *name, int hist, char **args);
 char *error_127(char *name, int hist, char **args);

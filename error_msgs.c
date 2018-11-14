@@ -6,10 +6,16 @@
 
 #include "shell.h"
 
+char *error_env(char *name, int hist, char **args);
+char *error_2_exit(char *name, int hist, char **args);
+char *error_2_cd(char *name, int hist, char **args);
+char *error_126(char *name, int hist, char **args);
+char *error_127(char *name, int hist, char **args);
+
 /**
- * error_env - Env error....
- * @name:
- * @hist:
+ * error_env - Creates an error message for shellby_env errors.
+ * @name: The command name.
+ * @hist: The history number of the command.
  * @args: An array of arguments passed to the command.
  *
  * Return: The error string.
@@ -44,14 +50,14 @@ char *error_env(char *name, int hist, char **args)
 }
 
 /**
- * error_2 - Creates an error message for shellby_exit errors.
+ * error_2_exit - Creates an error message for shellby_exit errors.
  * @name: The command name.
  * @hist: The history number of the command.
  * @args: An array of arguments passed to the command.
  *
  * Return: The error string.
  */
-char *error_2(char *name, int hist, char **args)
+char *error_2_exit(char *name, int hist, char **args)
 {
 	char *error, *hist_str;
 	int len;
@@ -84,7 +90,15 @@ char *error_2(char *name, int hist, char **args)
 	return (error);
 }
 
-char *error_2cd(char *name, int hist, char **args)
+/**
+ * error_2_cd - Creates an error message for shellby_cd errors.
+ * @name: The command name.
+ * @hist: The history number of the command.
+ * @args: An array of arguments passed to the command.
+ *
+ * Return: The error string.
+ */
+char *error_2_cd(char *name, int hist, char **args)
 {
 	char *error, *hist_str;
 	int len;

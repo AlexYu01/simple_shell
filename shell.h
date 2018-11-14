@@ -30,9 +30,9 @@ typedef struct list_s
 } list_t;
 
 /**
- * struct builtin_s - A structure type defining all builtin commands.
+ * struct builtin_s - A new struct type defining builtin commands.
  * @name: The name of the builtin command.
- * @f: A function pointer to the command's function.
+ * @f: A function pointer to the builtin command's function.
  */
 typedef struct builtin_s
 {
@@ -48,7 +48,6 @@ list_t *add_node_end(list_t **head, char *dir);
 void free_list(list_t *head);
 int num_len(int num);
 char *_itoa(int num);
-int create_error(char *name, int hist, char **args, int err);
 
 /* Builtins */
 int (*get_builtin(char *command))(char **args);
@@ -56,18 +55,20 @@ int shellby_exit(char **args);
 int shellby_env(char **args);
 int shellby_setenv(char **args);
 int shellby_unsetenv(char **args);
+int shellby_cd(char **args);
 
+/* Builtin Helpers */
 char **_copyenv(void);
 void free_env(void);
 char **_getenv(const char *name);
 
-/* Error handling */
+/* Error Handling */
 int num_len(int num);
 char *_itoa(int num);
 int create_error(char *name, int hist, char **args, int err);
 char *error_env(char *name, int hist, char **args);
-char *error_2(char *name, int hist, char **args);
-char *error_2cd(char *name, int hist, char **args);
+char *error_2_exit(char *name, int hist, char **args);
+char *error_2_cd(char *name, int hist, char **args);
 char *error_126(char *name, int hist, char **args);
 char *error_127(char *name, int hist, char **args);
 

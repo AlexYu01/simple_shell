@@ -32,7 +32,8 @@ char **_strtok(char *line, char *delim)
 	if (!words)
 		return (NULL);
 	/* replace \n with \0 */
-	line[index - 1] = '\0';
+	if (line[index - 1] == '\n')
+		line[index - 1] = '\0';
 	ptr = malloc(sizeof(char *) * (words + 1));
 	if (!ptr)
 		return (NULL);

@@ -8,9 +8,8 @@
 #include <errno.h>
 
 void sig_handler(int sig);
-int execute(char **argv, char *name, int hist);
-int get_args(char **argv);
-int run_args(char **argv, char *name, int *hist);
+int execute(char **args, char *name, int hist);
+int handle_args(char *name, int *hist);
 
 /**
  * sig_handler - Prints a new prompt upon a signal.
@@ -27,18 +26,18 @@ void sig_handler(int sig)
 
 /**
  * execute - Executes a command in a child process.
- * @argv: An array of arguments.
+ * @args: An array of arguments.
  * @name: The name of the call.
  * @hist: The history number of the call.
  *
  * Return: If an error occurs - a corresponding error code.
  *         O/w - The exit value of the last executed command.
  */
-int execute(char **argv, char *name, int hist)
+int execute(char **args, char *name, int hist)
 {
 	pid_t child_pid;
 	int status, flag = 0, ret;
-	char *command = argv[0];
+	char *command = args[0];
 
 	if (command[0] != '/' && command[0] != '.')
 	{
@@ -59,17 +58,17 @@ int execute(char **argv, char *name, int hist)
 		if (!command || (access(command, F_OK) == -1))
 		{
 			if (errno == EACCES)
-				_exit(create_error(name, hist, argv, 126));
+				_exit(create_error(name, hist, args, 126));
 			else
-				_exit(create_error(name, hist, argv, 127));
+				_exit(create_error(name, hist, args, 127));
 		}
 		/*
 		if (access(command, X_OK) == -1)
 			return (create_error(name, hist, argv[0], 126));
 		*/
-		execve(command, argv, NULL);
+		execve(command, args, NULL);
 		if (errno == EACCES)
-			_exit(create_error(name, hist, argv, 126));
+			_exit(create_error(name, hist, args, 126));
 	}
 	else
 	{
@@ -83,80 +82,57 @@ int execute(char **argv, char *name, int hist)
 }
 
 /**
- * get_args - Reads and tokenizes arguments from the command line.
- * @argv: An array to store the tokenized arguments.
+ * handle_args - Gets and calls the execution of a command.
+ * @name: The name of the call.
+ * @hist: The history number of the call.
  *
- * Return: If an error occurs - NULL.
- *         O/w - the tokenized array of arguments.
+ * Return: If an end-of-file is read - -2.
+ *         If the input cannot be tokenized - -1.
+ *         O/w - The value of the last executed command.
  */
-int get_args(char **argv)
+int handle_args(char *name, int *hist)
 {
-	size_t n = 0;
+	int ret;
+	size_t index = 0;
 	ssize_t read;
-	char *line = NULL, **args;
-	int index;
+	char **args, *line = NULL;
+	int (*builtin)(char **argv);
 
-	read = getline(&line, &n, stdin);
-	if (read == -1 || read == 1)
+	read = getline(&line, &index, stdin);
+	if (read == -1)
+	{
 		free(line);
-
+		return (-2);
+	}
 	if (read == 1)
 	{
+		free(line);
 		printf("$ ");
-		return (get_args(argv));
+		return (handle_args(name, hist));
 	}
-	if (read == -1)
-		return (-2);
 
 	args = _strtok(line, " ");
+	free(line);
 	if (!args)
 	{
 		perror("Failed to tokenize");
 		return (-1);
 	}
-
-	for (index = 0; args[index]; index++)
-		argv[index] = args[index];
-
-	free(line);
-	free(args);
-	return (0);
-}
-
-/**
- * run_args - Calls the execution of a command.
- * @argv: An array of arguments.
- * @name: The name of the call.
- * @hist: The history number of the call.
- *
- * Return: If an error occurs - -1.
- *         O/w - the exit value of the last executed command.
- */
-int run_args(char **argv, char *name, int *hist)
-{
-	int ret, index;
-	int (*builtin)(char **argv);
-
-	ret = get_args(argv);
-	if (ret == -1)
-		return (-1);
-	if (ret == -2)
-		return (-2);
-
-	builtin = get_builtin(argv[0]);
+	builtin = get_builtin(args[0]);
 	if (builtin)
 	{
-		ret = builtin(argv);
+		ret = builtin(args);
 		if (ret)
-			create_error(name, *hist, argv, ret);
+			create_error(name, *hist, args, ret);
 	}
 	else
-		ret = execute(argv, name, *hist);
+		ret = execute(args, name, *hist);
 
 	(*hist)++;
 
-	for (index = 0; argv[index]; index++)
-		free(argv[index]);
+	for (index = 0; args[index]; index++)
+		free(args[index]);
+	free(args);
 
 	return (ret);
 }
@@ -182,7 +158,7 @@ int main(int argc, char *argv[])
 	{
 		while (ret == 0)
 		{
-			ret = run_args(argv, name, &hist);
+			ret = handle_args(name, &hist);
 			if (ret == -2)
 				return (0);
 		}
@@ -192,7 +168,7 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		printf("$ ");
-		ret = run_args(argv, name, &hist);
+		ret = handle_args(name, &hist);
 		if (ret == -2)
 		{
 			printf("\n");

@@ -106,7 +106,7 @@ int handle_args(char *name, int *hist)
 	}
 	if (read == 1)
 	{
-		if (!(line[0]))
+		if (isatty(STDIN_FILENO))
 			printf("$ ");
 		free(line);
 		return (handle_args(name, hist));

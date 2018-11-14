@@ -53,6 +53,9 @@ int create_error(char *name, int hist, char **args, int err);
 /* Builtins */
 int (*get_builtin(char *command))(char **args);
 int shellby_exit(char **args);
+
+char **_copyenv(void);
+void free_env(void);
 char *_getenv(const char *name);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);

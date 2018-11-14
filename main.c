@@ -165,6 +165,9 @@ int main(int argc, char *argv[])
 		return (ret);
 	}
 
+	environ = _copyenv();
+	if (!environ)
+		exit(-100);
 	while (1)
 	{
 		printf("$ ");
@@ -172,6 +175,7 @@ int main(int argc, char *argv[])
 		if (ret == -2)
 		{
 			printf("\n");
+			free_env();
 			exit(0);
 		}
 	}

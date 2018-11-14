@@ -25,7 +25,7 @@ int (*get_builtin(char *command))(char **args)
 		{ "setenv", shellby_setenv },
 		{ "unsetenv", shellby_unsetenv },
 		{ "cd", shellby_cd },
-	//	{ "alias", shelly_alias },
+	/*	{ "alias", shelly_alias },*/
 		{ NULL, NULL }
 	};
 	int i;

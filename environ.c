@@ -6,10 +6,6 @@
 
 #include "shell.h"
 
-char *_getenv(const char *name);
-int _setenv(const char *name, const char *value, int overwrite);
-int _unsetenv(const char *name);
-
 
 /**
  * _copyenv - Creates a copy of the environment.
@@ -19,11 +15,11 @@ int _unsetenv(const char *name);
  */
 char ** _copyenv(void)
 {
-	char **new_envrion;
+	char **new_environ;
 	size_t size;
 	int index;
 
-	for (size=0; environ[size]; size++)
+	for (size = 0; environ[size]; size++)
 		;
 
 	new_environ = malloc(sizeof(char *) * (size + 1));
@@ -42,7 +38,20 @@ char ** _copyenv(void)
 		}
 		strcpy(new_environ[index], environ[index]);
 	}
+	new_environ[index] = NULL;
 	return (new_environ);
+}
+
+/**
+ * free_env - Frees the the environment copy.
+ */
+void free_env(void)
+{
+	int index;
+
+	for (index = 0; environ[index]; index++)
+		free(environ[index]);
+	free(environ);
 }
 /**
  * _getenv - Gets an environmental variable from the PATH.
@@ -146,21 +155,14 @@ int _unsetenv(const char *name)
 	for (index = 0, index2 = 0; environ[index]; index++)
 	{
 		if (env_var == environ[index])
-			continue;
-
-		new_environ[index2] = malloc(strlen(environ[index] + 1));
-		if (!new_environ[index2])
 		{
-			for (index2--; index2 >= 0; index2--)
-				free(new_environ[index2]);
-			free(new_environ);
-			return (-1);
+			free(env_var);
+			continue;
 		}
-
-		strcpy(new_environ[index2], environ[index]);
+		new_environ[index2] = environ[index];
 		index2++;
 	}
-
+	free(environ);
 	environ = new_environ;
 	environ[size - 1] = NULL;
 

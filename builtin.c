@@ -72,6 +72,6 @@ int shellby_exit(char **args)
 	for (i = 0; args[i]; i++)
 		free(args[i]);
 	free(args);
-
+	free_env();
 	exit(num * sign);
 }

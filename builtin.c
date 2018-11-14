@@ -6,9 +6,6 @@
 
 #include "shell.h"
 
-int (*get_builtin(char *command))(char **args);
-int shellby_exit(char **args);
-
 /**
  * get_builtin - Matches a command with a corresponding
  *               shellby builtin function.
@@ -20,11 +17,10 @@ int (*get_builtin(char *command))(char **args)
 {
 	builtin_t funcs[] = {
 		{ "exit", shellby_exit },
-
-	/*	{ "env", shellby_env },
+		{ "env", shellby_env },
 		{ "setenv", shellby_setenv },
 		{ "unsetenv", shellby_unsetenv },
-		{ "cd", shellby_cd },
+	/*	{ "cd", shellby_cd },
 		{ "alias", shelly_alias },
 	*/	{ NULL, NULL }
 	};

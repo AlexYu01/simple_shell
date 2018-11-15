@@ -28,13 +28,13 @@ char *get_location(char *command)
 
 	while (dirs)
 	{
-		temp = malloc(strlen(dirs->dir) + strlen(command) + 2);
+		temp = malloc(_strlen(dirs->dir) + _strlen(command) + 2);
 		if (!temp)
 			return (NULL);
 
-		strcpy(temp, dirs->dir);
-		strcat(temp, "/");
-		strcat(temp, command);
+		_strcpy(temp, dirs->dir);
+		_strcat(temp, "/");
+		_strcat(temp, command);
 
 		if (stat(temp, &st) == 0)
 		{

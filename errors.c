@@ -89,7 +89,7 @@ int create_error(char *name, int hist, char **args, int err)
 			error = error_127(name, hist, args);
 			break;
 	}
-	write(STDERR_FILENO, error, strlen(error));
+	write(STDERR_FILENO, error, _strlen(error));
 
 	if (error)
 		free(error);

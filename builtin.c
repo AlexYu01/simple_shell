@@ -53,22 +53,22 @@ int shellby_exit(char **args)
 	int i = 0, sign = 1;
 	unsigned int num = 0;
 
-	if (args[1])
+	if (args[0])
 	{
-		if (args[1][i] == '-')
+		if (args[0][i] == '-')
 			sign = -1;
-		for (; args[1][i]; i++)
+		for (; args[0][i]; i++)
 		{
-			if (args[1][i] == '-')
+			if (args[0][i] == '-')
 				sign *= -1;
 
-			if (args[1][i] >= '0' && args[1][i] <= '9')
-				num = (num * 10) + (args[1][i] - '0');
+			if (args[0][i] >= '0' && args[0][i] <= '9')
+				num = (num * 10) + (args[0][i] - '0');
 			else
 				return (2);
 		}
 	}
-
+	args -= 1;
 	for (i = 0; args[i]; i++)
 		free(args[i]);
 	free(args);
@@ -86,6 +86,7 @@ int shellby_exit(char **args)
  */
 int shellby_cd(char **args)
 {
+	char **dir_info;
 	char *oldpwd = NULL, *pwd = NULL;
 	struct stat dir;
 
@@ -93,14 +94,15 @@ int shellby_cd(char **args)
 	if (!oldpwd)
 		return (-1);
 
-	if (args[1])
+	if (args[0])
 	{
-		if (*(args[1]) == '-')
+		if (*(args[0]) == '-')
 			chdir(*(_getenv("OLDPWD")) + 7);
 		else
 		{
-			if (stat(args[1], &dir) == 0 && S_ISDIR(dir.st_mode))
-				chdir(args[1]);
+			if (stat(args[0], &dir) == 0 && S_ISDIR(dir.st_mode)
+					&& ((dir.st_mode & S_IXUSR) != 0))
+				chdir(args[0]);
 			else
 			{
 				free(oldpwd);
@@ -115,11 +117,22 @@ int shellby_cd(char **args)
 	if (!pwd)
 		return (-1);
 
-	setenv("OLDPWD", oldpwd, 1);
-	setenv("PWD", pwd, 1);
+	dir_info = malloc(sizeof(char *) * 2);
+	if (!dir_info)
+		return (-1);
+
+	dir_info[0] = "OLDPWD";
+	dir_info[1] = oldpwd;
+	if (shellby_setenv(dir_info) == -1)
+		return (-1);
+
+	dir_info[0] = "PWD";
+	dir_info[1] = pwd;
+	if (shellby_setenv(dir_info) == -1)
+		return (-1);
 
 	free(oldpwd);
 	free(pwd);
-
+	free(dir_info);
 	return (0);
 }

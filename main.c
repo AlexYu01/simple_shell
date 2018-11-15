@@ -119,7 +119,7 @@ int handle_args(char *name, int *hist)
 	builtin = get_builtin(args[0]);
 	if (builtin)
 	{
-		ret = builtin(args);
+		ret = builtin(args + 1);
 		if (ret)
 			create_error(name, *hist, args, ret);
 	}

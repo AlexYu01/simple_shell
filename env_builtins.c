@@ -54,17 +54,17 @@ int shellby_setenv(char **args)
 	size_t size;
 	int index;
 
-	if (!args[1] || !args[2])
+	if (!args[0] || !args[1])
 		return (-1);
 
-	new_value = malloc(strlen(args[1]) + 1 + strlen(args[2]) + 1);
+	new_value = malloc(strlen(args[0]) + 1 + strlen(args[1]) + 1);
 	if (!new_value)
 		return (-1);
-	strcpy(new_value, args[1]);
+	strcpy(new_value, args[0]);
 	strcat(new_value, "=");
-	strcat(new_value, args[2]);
+	strcat(new_value, args[1]);
 
-	env_var = _getenv(args[1]);
+	env_var = _getenv(args[0]);
 	if (env_var)
 	{
 		free(*env_var);
@@ -106,9 +106,9 @@ int shellby_unsetenv(char **args)
 	size_t size;
 	int index, index2;
 
-	if (!args[1])
+	if (!args[0])
 		return (-1);
-	env_var = _getenv(args[1]);
+	env_var = _getenv(args[0]);
 	if (!env_var)
 		return (0);
 
@@ -135,4 +135,3 @@ int shellby_unsetenv(char **args)
 
 	return (0);
 }
-

@@ -29,7 +29,7 @@ char *error_env(char *name, int hist, char **args)
 	if (!hist_str)
 		return (NULL);
 
-	len = strlen(name) + strlen(hist_str) + strlen(args[0]) + 45;
+	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 45;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
 	{
@@ -37,13 +37,13 @@ char *error_env(char *name, int hist, char **args)
 		return (NULL);
 	}
 
-	strcpy(error, name);
-	strcat(error, ": ");
-	strcat(error, hist_str);
-	strcat(error, ": ");
-	strcat(error, args[0]);
-	strcat(error, ": ");
-	strcat(error, "Unable to add/remove from environment\n");
+	_strcpy(error, name);
+	_strcat(error, ": ");
+	_strcat(error, hist_str);
+	_strcat(error, ": ");
+	_strcat(error, args[0]);
+	_strcat(error, ": ");
+	_strcat(error, "Unable to add/remove from environment\n");
 
 	free(hist_str);
 	return (error);
@@ -66,8 +66,8 @@ char *error_2_exit(char *name, int hist, char **args)
 	if (!hist_str)
 		return (NULL);
 
-	len = strlen(name) + strlen(hist_str) + strlen(args[0])
-	      + strlen(args[1]) + 23;
+	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0])
+	      + _strlen(args[1]) + 23;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
 	{
@@ -75,16 +75,16 @@ char *error_2_exit(char *name, int hist, char **args)
 		return (NULL);
 	}
 
-	strcpy(error, name);
-	strcat(error, ": ");
-	strcat(error, hist_str);
-	strcat(error, ": ");
-	strcat(error, args[0]);
-	strcat(error, ": ");
-	strcat(error, "Illegal Number");
-	strcat(error, ": ");
-	strcat(error, args[1]);
-	strcat(error, "\n");
+	_strcpy(error, name);
+	_strcat(error, ": ");
+	_strcat(error, hist_str);
+	_strcat(error, ": ");
+	_strcat(error, args[0]);
+	_strcat(error, ": ");
+	_strcat(error, "Illegal Number");
+	_strcat(error, ": ");
+	_strcat(error, args[1]);
+	_strcat(error, "\n");
 
 	free(hist_str);
 	return (error);
@@ -107,8 +107,8 @@ char *error_2_cd(char *name, int hist, char **args)
 	if (!hist_str)
 		return (NULL);
 
-	len = strlen(name) + strlen(hist_str) + strlen(args[0])
-	      + strlen(args[1]) + 18;
+	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0])
+	      + _strlen(args[1]) + 18;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
 	{
@@ -116,15 +116,15 @@ char *error_2_cd(char *name, int hist, char **args)
 		return (NULL);
 	}
 
-	strcpy(error, name);
-	strcat(error, ": ");
-	strcat(error, hist_str);
-	strcat(error, ": ");
-	strcat(error, args[0]);
-	strcat(error, ": ");
-	strcat(error, "can't cd to ");
-	strcat(error, args[1]);
-	strcat(error, "\n");
+	_strcpy(error, name);
+	_strcat(error, ": ");
+	_strcat(error, hist_str);
+	_strcat(error, ": ");
+	_strcat(error, args[0]);
+	_strcat(error, ": ");
+	_strcat(error, "can't cd to ");
+	_strcat(error, args[1]);
+	_strcat(error, "\n");
 
 	free(hist_str);
 	return (error);
@@ -147,7 +147,7 @@ char *error_126(char *name, int hist, char **args)
 	if (!hist_str)
 		return (NULL);
 
-	len = strlen(name) + strlen(hist_str) + strlen(args[0]) + 24;
+	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 24;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
 	{
@@ -155,13 +155,13 @@ char *error_126(char *name, int hist, char **args)
 		return (NULL);
 	}
 
-	strcpy(error, name);
-	strcat(error, ": ");
-	strcat(error, hist_str);
-	strcat(error, ": ");
-	strcat(error, args[0]);
-	strcat(error, ": ");
-	strcat(error, "Permission denied\n");
+	_strcpy(error, name);
+	_strcat(error, ": ");
+	_strcat(error, hist_str);
+	_strcat(error, ": ");
+	_strcat(error, args[0]);
+	_strcat(error, ": ");
+	_strcat(error, "Permission denied\n");
 
 	free(hist_str);
 	return (error);
@@ -184,7 +184,7 @@ char *error_127(char *name, int hist, char **args)
 	if (!hist_str)
 		return (NULL);
 
-	len = strlen(name) + strlen(hist_str) + strlen(args[0]) + 16;
+	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 16;
 	error = malloc(sizeof(char) * (len + 1));
 	if (!error)
 	{
@@ -192,13 +192,13 @@ char *error_127(char *name, int hist, char **args)
 		return (NULL);
 	}
 
-	strcpy(error, name);
-	strcat(error, ": ");
-	strcat(error, hist_str);
-	strcat(error, ": ");
-	strcat(error, args[0]);
-	strcat(error, ": ");
-	strcat(error, "not found\n");
+	_strcpy(error, name);
+	_strcat(error, ": ");
+	_strcat(error, hist_str);
+	_strcat(error, ": ");
+	_strcat(error, args[0]);
+	_strcat(error, ": ");
+	_strcat(error, "not found\n");
 
 	free(hist_str);
 	return (error);

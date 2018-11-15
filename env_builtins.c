@@ -10,7 +10,6 @@ char **_get_env(const char *name);
 int shellby_setenv(char **args);
 int shellby_unsetenv(char **args);
 
-char **_get_env(const char *name);
 /**
  * shellby_env - Prints the current environment.
  * @args: An array of arguments passed to the shell.
@@ -31,7 +30,7 @@ int shellby_env(char **args)
 
 	for (index = 0; environ[index]; index++)
 	{
-		write(STDOUT_FILENO, environ[index], strlen(environ[index]));
+		write(STDOUT_FILENO, environ[index], _strlen(environ[index]));
 		write(STDOUT_FILENO, &nc, 1);
 	}
 
@@ -57,12 +56,12 @@ int shellby_setenv(char **args)
 	if (!args[0] || !args[1])
 		return (-1);
 
-	new_value = malloc(strlen(args[0]) + 1 + strlen(args[1]) + 1);
+	new_value = malloc(_strlen(args[0]) + 1 + _strlen(args[1]) + 1);
 	if (!new_value)
 		return (-1);
-	strcpy(new_value, args[0]);
-	strcat(new_value, "=");
-	strcat(new_value, args[1]);
+	_strcpy(new_value, args[0]);
+	_strcat(new_value, "=");
+	_strcat(new_value, args[1]);
 
 	env_var = _getenv(args[0]);
 	if (env_var)

@@ -12,7 +12,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -48,6 +47,14 @@ list_t *add_node_end(list_t **head, char *dir);
 void free_list(list_t *head);
 int num_len(int num);
 char *_itoa(int num);
+
+
+/* String functions */
+char *_strcat(char *dest, const char *src);
+char *_strncat(char *dest, const char *src, size_t n);
+int _strncmp(const char *s1, const char *s2, size_t n);
+int _strlen(const char *s);
+char *_strcpy(char *dest, const char *src);
 
 /* Builtins */
 int (*get_builtin(char *command))(char **args);

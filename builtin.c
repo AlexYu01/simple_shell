@@ -32,7 +32,7 @@ int (*get_builtin(char *command))(char **args)
 
 	for (i = 0; funcs[i].name; i++)
 	{
-		if (strcmp(funcs[i].name, command) == 0)
+		if (_strncmp(funcs[i].name, command, _strlen(funcs[i].name)) == 0)
 			break;
 	}
 	return (funcs[i].f);

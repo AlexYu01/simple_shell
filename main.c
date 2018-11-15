@@ -152,8 +152,16 @@ int main(int argc, char *argv[])
 
 	signal(SIGINT, sig_handler);
 
+	environ = _copyenv();
+	if (!environ)
+		exit(-100);
+
 	if (argc != 1)
-		return (execute(argv + 1, name, hist));
+	{
+		ret = execute(argv + 1, name, hist);
+		free_env();
+		return (ret);
+	}
 
 	if (!isatty(STDIN_FILENO))
 	{
@@ -161,14 +169,15 @@ int main(int argc, char *argv[])
 		{
 			ret = handle_args(name, &hist);
 			if (ret == -2)
+			{
+				free_env();
 				return (0);
+			}
 		}
+		free_env();
 		return (ret);
 	}
 
-	environ = _copyenv();
-	if (!environ)
-		exit(-100);
 	while (1)
 	{
 		printf("$ ");
@@ -180,6 +189,7 @@ int main(int argc, char *argv[])
 			exit(0);
 		}
 	}
+				iree_env();
 
 	return (ret);
 }

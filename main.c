@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
 			exit(0);
 		}
 	}
-				iree_env();
 
+	free_env();
 	return (ret);
 }

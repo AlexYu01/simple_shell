@@ -76,5 +76,6 @@ char **_getenv(const char *name)
 		if (_strncmp(name, environ[index], len) == 0)
 			return (&environ[index]);
 	}
+
 	return (NULL);
 }

@@ -33,7 +33,7 @@ char *_strcpy(char *dest, const char *src)
 
 	for (i = 0; src[i] != '\0'; i++)
 		dest[i] = src[i];
-
+	dest[i] = '\0';
 	return (dest);
 }
 
@@ -58,7 +58,7 @@ char *_strcat(char *dest, const char *src)
 
 	while (*srcTemp != '\0')
 		*destTemp++ = *srcTemp++;
-
+	*destTemp = '\0';
 	return (dest);
 }
 
@@ -105,7 +105,7 @@ int _strncmp(const char *s1, const char *s2, size_t n)
 		else if (s1[i] < s2[i])
 			return (s1[i] - s2[i]);
 	}
-	if (i == n - 1)
+	if (i == n)
 		return (0);
 	else
 		return (-15);

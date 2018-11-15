@@ -112,6 +112,9 @@ int handle_args(char *name, int *hist)
 		return (handle_args(name, hist));
 	}
 
+	/* replace \n with \0 */
+	line[read - 1] = '\0';
+
 	args = _strtok(line, " ");
 	free(line);
 	if (!args)

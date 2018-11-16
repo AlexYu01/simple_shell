@@ -85,6 +85,7 @@ int execute(char **args, char *name, int hist)
  * handle_args - Gets and calls the execution of a command.
  * @name: The name of the call.
  * @hist: The history number of the call.
+ * @exe_ret: The return value of the last executed command.
  *
  * Return: If an end-of-file is read - -2.
  *         If the input cannot be tokenized - -1.
@@ -124,8 +125,12 @@ int handle_args(char *name, int *hist, int *exe_ret)
 	if (builtin)
 	{
 		ret = builtin(args + 1);
-		if (ret != -3 && ret != 0)
-			create_error(name, *hist, args, ret);
+		if (ret != -3)
+		{
+			*exe_ret = ret;
+			if (ret != 0)
+				create_error(name, *hist, args, ret);
+		}
 	}
 	else
 	{
@@ -147,7 +152,7 @@ int handle_args(char *name, int *hist, int *exe_ret)
  * @argc: The number of arguments supplied to the program.
  * @argv: An array of pointers to the arguments.
  *
- * Return: Always 0.
+ * Return: The last executed command.
  */
 int main(int argc, char *argv[])
 {

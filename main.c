@@ -98,7 +98,7 @@ int handle_args(char *name, int *hist)
 	char **args, *line = NULL;
 	int (*builtin)(char **argv);
 
-	read = getline(&line, &index, stdin);
+	read = _getline(&line, &index, STDIN_FILENO);
 	if (read == -1)
 	{
 		free(line);

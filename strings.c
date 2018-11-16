@@ -1,4 +1,16 @@
+/*
+ * File: strings.c
+ * Auth: Alex Yu
+ *       Brennan D Baraban
+ */
+
 #include "shell.h"
+
+int _strlen(const char *s);
+char *_strcpy(char *dest, const char *src);
+char *_strcat(char *dest, const char *src);
+char *_strncat(char *dest, const char *src, size_t n);
+int _strncmp(const char *s1, const char *s2, size_t n);
 
 /**
  * _strlen - Returns the length of a string.
@@ -6,7 +18,6 @@
  *
  * Return: The length of the character string.
  */
-
 int _strlen(const char *s)
 {
 	int length = 0;
@@ -19,14 +30,13 @@ int _strlen(const char *s)
 }
 
 /**
- * _strcpy - Copies the string pointed to by src, including the terminating
- * null byte to the buffer pointed by des.
+ * _strcpy - Copies the string pointed to by src, including the
+ *           terminating null byte, to the buffer pointed by des.
  * @dest: Pointer to the destination of copied string.
  * @src: Pointer to the src of the source string.
  *
  * Return: Pointer to dest.
  */
-
 char *_strcpy(char *dest, const char *src)
 {
 	size_t i;
@@ -44,7 +54,6 @@ char *_strcpy(char *dest, const char *src)
  *
  * Return: Pointer to destination string.
  */
-
 char *_strcat(char *dest, const char *src)
 {
 	char *destTemp;
@@ -63,15 +72,14 @@ char *_strcat(char *dest, const char *src)
 }
 
 /**
- * _strncat - Concantenates two strings where n number of bytes are copied from
- * source.
+ * _strncat - Concantenates two strings where n number
+ *            of bytes are copied from source.
  * @dest: Pointer to destination string.
  * @src: Pointer to source string.
  * @n: n bytes to copy from src.
  *
  * Return: Pointer to destination string.
  */
-
 char *_strncat(char *dest, const char *src, size_t n)
 {
 	size_t dest_len = _strlen(dest);
@@ -90,10 +98,10 @@ char *_strncat(char *dest, const char *src, size_t n)
  * @s2: Pointer to a string.
  * @n: The first n bytes of the strings to compare.
  *
- * Return: Less than 0 if s1 is shorter than s2. 0 if s1 and s2 match. Greater
- * than 0 if s1 is longer than s2.
+ * Return: Less than 0 if s1 is shorter than s2.
+ *         0 if s1 and s2 match.
+ *         Greater than 0 if s1 is longer than s2.
  */
-
 int _strncmp(const char *s1, const char *s2, size_t n)
 {
 	size_t i;

@@ -144,7 +144,7 @@ void variable_replacement(char **line, int *exe_ret)
 			}
 			_strcat(new_line, &old_line[k]);
 			free(old_line);
-			*args = new_line;
+			*line = new_line;
 			old_line = new_line;
 			j = -1;
 		}

@@ -75,11 +75,10 @@ char *get_env_value(char *var)
  *
  * @args: The double pointer containing the command and arguments.
  */
-void variable_replacement(char **args)
+void variable_replacement(char **args, int *exe_ret)
 {
-	int i, j, k = 0;
+	int i, j, k = 0, len;
 	char *replacement = NULL, *var = NULL, *line;
-	int ret, len;
 
 	for (i = 0; args[i]; i++)
 	{
@@ -96,8 +95,7 @@ void variable_replacement(char **args)
 				else if (args[i][j + 1] == '?')
 				{
 					/* TODO replace ret with real */
-					ret = -100;
-					replacement = _itoa(ret);
+					replacement = _itoa(*exe_ret);
 					k = j + 2;
 				}
 				else if (args[i][j + 1])

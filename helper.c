@@ -4,7 +4,24 @@ char *get_pid(void);
 char *get_env_value(char *var);
 
 /**
- * get_pid - Gets the current process ID.
+ * free_args - Free up memory taken by args.
+ *
+ * @args: The double array containing command/arguments terminated with NULL.
+ */
+void free_args(char **args)
+{
+	size_t i;
+
+	for (i = 0; args[i]; i++)
+		free(args[i]);
+	free(args);
+}
+/**
+ * get_pid - Gets the current process ID. Starts by opening up the stat file
+ * for the current process. Various information about the process is stored in
+ * the file and is delimited by a space. The PID is the first word in the file.
+ * Read the file into a buffer and replace the space at the end of the pid with
+ * \0.
  *
  * Return: The current process ID or NULL on failure.
  */
@@ -37,6 +54,8 @@ char *get_pid(void)
 
 /**
  * get_env_value - Gets the value corresponding to the environment variable.
+ * Environment variables are stored as such VARIABLE=VALUE.
+ *
  * @var: The environment variable to search for.
  *
  * Return: The value of the environment variable or an empty string if the
@@ -89,18 +108,17 @@ void variable_replacement(char **args, int *exe_ret)
 			{
 				if (args[i][j + 1] == '$')
 				{
-					/* has malloc memory */
 					replacement = get_pid();
 					k = j + 2;
 				}
 				else if (args[i][j + 1] == '?')
 				{
-					/* TODO replace ret with real */
 					replacement = _itoa(*exe_ret);
 					k = j + 2;
 				}
 				else if (args[i][j + 1])
 				{
+					/* extract the variable name to search for */
 					for (k = j + 1; args[i][k] && args[i][k] != '$'; k++)
 						;
 					len = k - (j + 1);

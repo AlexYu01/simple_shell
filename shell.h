@@ -7,6 +7,7 @@
  *       Brennan D Baraban
  */
 
+#include <fcntl.h>
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -40,6 +41,7 @@ typedef struct builtin_s
 } builtin_t;
 
 /* Helper Functions */
+ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
 char **_strtok(char *line, char *delim);
 char *get_location(char *command);
 list_t *get_path_dir(char *path);
@@ -47,7 +49,6 @@ list_t *add_node_end(list_t **head, char *dir);
 void free_list(list_t *head);
 int num_len(int num);
 char *_itoa(int num);
-
 
 /* String functions */
 char *_strcat(char *dest, const char *src);

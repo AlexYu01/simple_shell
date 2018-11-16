@@ -45,6 +45,7 @@ int (*get_builtin(char *command))(char **args)
  *
  * Return: If the given exit value is invalid - 2.
  *         O/w - exits with the given status value.
+ *         -3 if there are no arguments to exit back in main.
  *
  * Description: If no exit value is given, the function exits with 0.
  */
@@ -67,6 +68,10 @@ int shellby_exit(char **args)
 			else
 				return (2);
 		}
+	}
+	else
+	{
+		return (-3);
 	}
 	args -= 1;
 	for (i = 0; args[i]; i++)

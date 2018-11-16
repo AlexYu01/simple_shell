@@ -121,12 +121,11 @@ int handle_args(char *name, int *hist, int *exe_ret)
 
 	/* replace \n with \0 */
 	line[read - 1] = '\0';
-
+	variable_replacement(&line, exe_ret);
 	args = _strtok(line, " ");
 	free(line);
 	if (!args)
 		return (0);
-	variable_replacement(args, exe_ret);
 	builtin = get_builtin(args[0]);
 	if (builtin)
 	{

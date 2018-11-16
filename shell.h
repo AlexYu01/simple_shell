@@ -81,6 +81,6 @@ char *error_2_cd(char *name, int hist, char **args);
 char *error_126(char *name, int hist, char **args);
 char *error_127(char *name, int hist, char **args);
 
-void variable_replacement(char **args, int *exe_ret);
+void variable_replacement(char **line, int *exe_ret);
 void free_args(char **args);
 #endif /* _SHELL_H_ */

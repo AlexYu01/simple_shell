@@ -74,6 +74,7 @@ char *get_env_value(char *var)
  * preceded by the $ will be replaced with their corresponding value.
  *
  * @args: The double pointer containing the command and arguments.
+ * @exe_ret: The pointer to the return value of the last executed command.
  */
 void variable_replacement(char **args, int *exe_ret)
 {

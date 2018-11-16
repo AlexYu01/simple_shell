@@ -9,7 +9,7 @@
 
 void sig_handler(int sig);
 int execute(char **args, char *name, int hist);
-int handle_args(char *name, int *hist);
+int handle_args(char *name, int *hist, int *exe_ret);
 
 /**
  * sig_handler - Prints a new prompt upon a signal.
@@ -85,12 +85,13 @@ int execute(char **args, char *name, int hist)
  * handle_args - Gets and calls the execution of a command.
  * @name: The name of the call.
  * @hist: The history number of the call.
+ * @exe_ret: The return value of the last executed command.
  *
  * Return: If an end-of-file is read - -2.
  *         If the input cannot be tokenized - -1.
  *         O/w - The value of the last executed command.
  */
-int handle_args(char *name, int *hist)
+int handle_args(char *name, int *hist, int *exe_ret)
 {
 	int ret;
 	size_t index = 0;
@@ -109,7 +110,7 @@ int handle_args(char *name, int *hist)
 		if (isatty(STDIN_FILENO))
 			printf("$ ");
 		free(line);
-		return (handle_args(name, hist));
+		return (handle_args(name, hist, exe_ret));
 	}
 
 	/* replace \n with \0 */
@@ -119,16 +120,24 @@ int handle_args(char *name, int *hist)
 	free(line);
 	if (!args)
 		return (0);
+	variable_replacement(args, exe_ret);
 	builtin = get_builtin(args[0]);
 	if (builtin)
 	{
 		ret = builtin(args + 1);
-		if (ret)
-			create_error(name, *hist, args, ret);
+		if (ret != -3)
+		{
+			*exe_ret = ret;
+			if (ret != 0)
+				create_error(name, *hist, args, ret);
+		}
 	}
 	else
-		ret = execute(args, name, *hist);
+	{
 
+		*exe_ret = execute(args, name, *hist);
+		ret = *exe_ret;
+	}
 	(*hist)++;
 
 	for (index = 0; args[index]; index++)
@@ -143,15 +152,17 @@ int handle_args(char *name, int *hist)
  * @argc: The number of arguments supplied to the program.
  * @argv: An array of pointers to the arguments.
  *
- * Return: Always 0.
+ * Return: The last executed command.
  */
 int main(int argc, char *argv[])
 {
-	int ret = 0, hist = 1;
+	int ret = 0, hist = 1, retn;
+	int *exe_ret = &retn;
 	char *name = argv[0];
 
 	signal(SIGINT, sig_handler);
 
+	*exe_ret = 0;
 	environ = _copyenv();
 	if (!environ)
 		exit(-100);
@@ -165,9 +176,10 @@ int main(int argc, char *argv[])
 
 	if (!isatty(STDIN_FILENO))
 	{
+		/* TODO probably dont have to change ret to *exe_ret */
 		while (ret == 0)
 		{
-			ret = handle_args(name, &hist);
+			ret = handle_args(name, &hist, exe_ret);
 			if (ret == -2)
 			{
 				free_env();
@@ -181,15 +193,16 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		printf("$ ");
-		ret = handle_args(name, &hist);
-		if (ret == -2)
+		ret = handle_args(name, &hist, exe_ret);
+		if (ret == -2 || ret == -3)
 		{
-			printf("\n");
+			if (ret == -2)
+				printf("\n");
 			free_env();
-			exit(0);
+			exit(*exe_ret);
 		}
 	}
 
 	free_env();
-	return (ret);
+	return (*exe_ret);
 }

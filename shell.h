@@ -15,7 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
 
 extern char **environ;
 
@@ -46,9 +45,9 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
 char **_strtok(char *line, char *delim);
 char *get_location(char *command);
 list_t *get_path_dir(char *path);
-list_t *add_node_end(list_t **head, char *dir);
+void variable_replacement(char **args, int *exe_ret);
+void free_args(char **args);
 void free_list(list_t *head);
-int num_len(int num);
 char *_itoa(int num);
 
 /* String functions */
@@ -72,8 +71,6 @@ void free_env(void);
 char **_getenv(const char *name);
 
 /* Error Handling */
-int num_len(int num);
-char *_itoa(int num);
 int create_error(char *name, int hist, char **args, int err);
 char *error_env(char *name, int hist, char **args);
 char *error_2_exit(char *name, int hist, char **args);
@@ -81,6 +78,4 @@ char *error_2_cd(char *name, int hist, char **args);
 char *error_126(char *name, int hist, char **args);
 char *error_127(char *name, int hist, char **args);
 
-void variable_replacement(char **line, int *exe_ret);
-void free_args(char **args);
 #endif /* _SHELL_H_ */

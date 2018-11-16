@@ -8,8 +8,8 @@
 
 list_t *add_node_end(list_t **head, char *dir);
 void free_list(list_t *head);
-list_t *get_path_dir(char *path);
 char *fill_path_dir(char *path);
+list_t *get_path_dir(char *path);
 
 /**
  * add_node_end - Adds a node to the end of a list_t linked list.

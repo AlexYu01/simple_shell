@@ -6,6 +6,10 @@
 
 #include "shell.h"
 
+int token_len(char *str, char *delim);
+int count_tokens(char *str, char *delim);
+char **_strtok(char *line, char *delim);
+
 /**
  * token_len - Locates the delimiter index marking the end
  *             of the first token contained within a string.

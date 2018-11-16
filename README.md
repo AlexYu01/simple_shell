@@ -10,6 +10,7 @@ A simple UNIX command interpreter written as part of the low-level programming a
 To invoke **shellby**, compile all `.c` files in the repository and run the resulting executable:
 
 `~$ gcc *.c -o shellby`
+
 `~$ ./shellby`
 
 **Shellby** can be invoked both interactively and non-interactively. If **shellby** is invoked with standard input not connected to a terminal, it reads and executes received commands in order.
@@ -28,7 +29,7 @@ The current working directory as set by the **cd** command.
 The previous working directory as set by the **cd** command.
 
 * **PATH**
-A colon-separated list of directories in which the shell looks for commands. A null directory name in the value of **PATH** (represented by any of two adjacent colons, an initial colon, or a trailing colon) indicates the current directory.
+A colon-separated list of directories in which the shell looks for commands. A null directory name in the path (represented by any of two adjacent colons, an initial colon, or a trailing colon) indicates the current directory.
 
 ### Command Execution
 After receiving a command, **shellby** tokenizes it into words using `" "` as a delimiter and takes the following actions:

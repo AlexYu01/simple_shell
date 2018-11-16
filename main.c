@@ -119,6 +119,7 @@ int handle_args(char *name, int *hist)
 	free(line);
 	if (!args)
 		return (0);
+	variable_replacement(args);
 	builtin = get_builtin(args[0]);
 	if (builtin)
 	{

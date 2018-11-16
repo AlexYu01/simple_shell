@@ -65,10 +65,10 @@ int execute(char **args, char *name, int hist)
 			free_args(args);
 			_exit(ret);
 		}
-		/*
-		if (access(command, X_OK) == -1)
-			return (create_error(name, hist, argv[0], 126));
-		*/
+	/*
+	*	if (access(command, X_OK) == -1)
+	*		return (create_error(name, hist, argv[0], 126));
+	*/
 		execve(command, args, NULL);
 		if (errno == EACCES)
 			ret = (create_error(name, hist, args, 126));

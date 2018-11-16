@@ -43,11 +43,11 @@ int (*get_builtin(char *command))(char **args)
  *                for the shellby shell.
  * @args: An array of arguments containing the exit value.
  *
- * Return: If the given exit value is invalid - 2.
+ * Return: If there are no arguments - -3.
+ *         If the given exit value is invalid - 2.
  *         O/w - exits with the given status value.
- *         -3 if there are no arguments to exit back in main.
  *
- * Description: If no exit value is given, the function exits with 0.
+ * Description: Upon returning -3, the program exits back in the main function.
  */
 int shellby_exit(char **args)
 {

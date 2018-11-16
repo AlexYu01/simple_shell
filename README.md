@@ -7,9 +7,28 @@ A simple UNIX command interpreter written as part of the low-level programming a
 **Shellby** is a simple UNIX command language interpreter that executes commands read from standard input.
 
 ### Invocation
+To invoke **shellby**, compile all `.c` files in the repository and run the resulting executable:
+
+`~$ gcc *.c -o shellby`
+`~$ ./shellby`
+
 **Shellby** can be invoked both interactively and non-interactively. If **shellby** is invoked with standard input not connected to a terminal, it reads and executes received commands in order.
 
 If **shellby** is invoked with standard input connected to a terminal (determined by [isatty](https://linux.die.net/man/3/isatty)(3)), an *interactive* shell is opened. When executing interactively, **shellby** displays the prompt `$ ` when it is ready to read a command.
+
+### Environment
+Upon invocation, **shellby** receives and copies the environment of the parent process in which it was executed. This environment is an array of *name-value* strings describing variables in the format *NAME=VALUE*. A few key environmental variables are:
+* **HOME**
+The home directory of the current user and the default directory argument for the **cd** builtin command.
+
+* **PWD**
+The current working directory as set by the **cd** command.
+
+* **OLDPWD**
+The previous working directory as set by the **cd** command.
+
+* **PATH**
+A colon-separated list of directories in which the shell looks for commands. A null directory name in the value of **PATH** (represented by any of two adjacent colons, an initial colon, or a trailing colon) indicates the current directory.
 
 ### Command Execution
 After receiving a command, **shellby** tokenizes it into words using `" "` as a delimiter and takes the following actions:
@@ -24,8 +43,19 @@ If a command is not found, the return status is 127; if a command is found but i
 
 All builtins return zero on success and two on incorrect usage.
 
-## Signals
+### Signals
 While running in interactive mode, **shellby** ignores the keyboard input `Ctrl+c`. Alternatively, an input of end-of-file (`Ctrl+d`) will exit the program. 
+
+### Variable Replacement
+**Shellby** interprets the `$` character for variable replacement.
+* `$ENV_VARIABLE`
+  * `ENV_VARIABLE` is substituted with its value.
+
+* `$?`
+  * `?` is substitued with the return value of the last program executed.
+
+* `$$`
+  * The second `$` is substitued with the current process ID.
 
 ### Shellby Builtin Commands
 * **cd**

@@ -36,7 +36,7 @@ void sig_handler(int sig)
 int execute(char **args, char *name, int hist)
 {
 	pid_t child_pid;
-	int status, flag = 0, ret;
+	int status, flag = 0, ret = 0;
 	char *command = args[0];
 
 	if (command[0] != '/' && command[0] != '.')
@@ -58,9 +58,12 @@ int execute(char **args, char *name, int hist)
 		if (!command || (access(command, F_OK) == -1))
 		{
 			if (errno == EACCES)
-				_exit(create_error(name, hist, args, 126));
+				ret = (create_error(name, hist, args, 126));
 			else
-				_exit(create_error(name, hist, args, 127));
+				ret = (create_error(name, hist, args, 127));
+			free_env();
+			free_args(args);
+			_exit(ret);
 		}
 		/*
 		if (access(command, X_OK) == -1)
@@ -68,7 +71,10 @@ int execute(char **args, char *name, int hist)
 		*/
 		execve(command, args, NULL);
 		if (errno == EACCES)
-			_exit(create_error(name, hist, args, 126));
+			ret = (create_error(name, hist, args, 126));
+		free_env();
+		free_args(args);
+		_exit(ret);
 	}
 	else
 	{
@@ -140,9 +146,7 @@ int handle_args(char *name, int *hist, int *exe_ret)
 	}
 	(*hist)++;
 
-	for (index = 0; args[index]; index++)
-		free(args[index]);
-	free(args);
+	free_args(args);
 
 	return (ret);
 }

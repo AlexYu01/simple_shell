@@ -92,60 +92,61 @@ char *get_env_value(char *var)
  * /exit value of the last program exeucted. Environment variables names
  * preceded by the $ will be replaced with their corresponding value.
  *
- * @args: The double pointer containing the command and arguments.
+ * @args: The double pointer to the line read.
  * @exe_ret: The pointer to the return value of the last executed command.
  */
-void variable_replacement(char **args, int *exe_ret)
+void variable_replacement(char **line, int *exe_ret)
 {
-	int i, j, k = 0, len;
-	char *replacement = NULL, *var = NULL, *line;
+	int j, k = 0, len;
+	char *replacement = NULL, *old_line = NULL, *var = NULL, *new_line;
 
-	for (i = 0; args[i]; i++)
+	old_line = *line;
+	for (j = 0; old_line[j]; j++)
 	{
-		for (j = 0; args[i][j]; j++)
+		if (old_line[j] == '$' && old_line[j + 1])
 		{
-			if (args[i][j] == '$' && args[i][j + 1])
+			if (old_line[j + 1] == '$')
 			{
-				if (args[i][j + 1] == '$')
-				{
-					replacement = get_pid();
-					k = j + 2;
-				}
-				else if (args[i][j + 1] == '?')
-				{
-					replacement = _itoa(*exe_ret);
-					k = j + 2;
-				}
-				else if (args[i][j + 1])
-				{
-					/* extract the variable name to search for */
-					for (k = j + 1; args[i][k] && args[i][k] != '$'; k++)
-						;
-					len = k - (j + 1);
-					var = malloc(len + 1);
-					if (!var)
-						return;
-					var[0] = '\0';
-					_strncat(var, &args[i][j + 1], len);
-					replacement = get_env_value(var);
-					free(var);
-				}
-				line = malloc(j + _strlen(replacement) + _strlen(&args[i][k]) + 1);
-				if (!line)
-					return;
-				line[0] = '\0';
-				_strncat(line, args[i], j);
-				if (replacement)
-				{
-					_strcat(line, replacement);
-					free(replacement);
-					replacement = NULL;
-				}
-				_strcat(line, &args[i][k]);
-				free(args[i]);
-				args[i] = line;
-				j = -1;
+				replacement = get_pid();
+				k = j + 2;
 			}
+			else if (old_line[j + 1] == '?')
+			{
+				replacement = _itoa(*exe_ret);
+				k = j + 2;
+			}
+			else if (old_line[j + 1])
+			{
+				/* extract the variable name to search for */
+				for (k = j + 1; old_line[k] &&
+						old_line[k] != '$' &&
+						old_line[k] != ' '; k++)
+					;
+				len = k - (j + 1);
+				var = malloc(len + 1);
+				if (!var)
+					return;
+				var[0] = '\0';
+				_strncat(var, &old_line[j + 1], len);
+				replacement = get_env_value(var);
+				free(var);
+			}
+			new_line = malloc(j + _strlen(replacement) + _strlen(&old_line[k]) + 1);
+			if (!line)
+				return;
+			new_line[0] = '\0';
+			_strncat(new_line, old_line, j);
+			if (replacement)
+			{
+				_strcat(new_line, replacement);
+				free(replacement);
+				replacement = NULL;
+			}
+			_strcat(new_line, &old_line[k]);
+			free(old_line);
+			*args = new_line;
+			old_line = new_line;
+			j = -1;
 		}
 	}
 }

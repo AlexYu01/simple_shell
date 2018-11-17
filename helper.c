@@ -8,7 +8,7 @@
 
 void free_args(char **args);
 char *get_pid(void);
-char *get_env_value(char *var);
+char *get_env_value(char *beginning, int len);
 void variable_replacement(char **args, int *exe_ret);
 
 /**
@@ -70,13 +70,19 @@ char *get_pid(void)
  *
  * Description: Variables are stored in the format VARIABLE=VALUE.
  */
-char *get_env_value(char *var)
+char *get_env_value(char *beginning, int len)
 {
 	char **var_addr;
-	char *replacement, *temp;
+	char *replacement, *temp, *var;
+
+	var = malloc(len + 1);
+	if (!var)
+		return (NULL);
+	var[0] = '\0';
+	_strncat(var, beginning, len);
 
 	var_addr = _getenv(var);
-
+	free(var);
 	if (var_addr)
 	{
 		temp = *var_addr;
@@ -108,12 +114,13 @@ char *get_env_value(char *var)
 void variable_replacement(char **line, int *exe_ret)
 {
 	int j, k = 0, len;
-	char *replacement = NULL, *old_line = NULL, *var = NULL, *new_line;
+	char *replacement = NULL, *old_line = NULL, *new_line;
 
 	old_line = *line;
 	for (j = 0; old_line[j]; j++)
 	{
-		if (old_line[j] == '$' && old_line[j + 1])
+		if (old_line[j] == '$' && old_line[j + 1] &&
+				old_line[j + 1] != ' ')
 		{
 			if (old_line[j + 1] == '$')
 			{
@@ -133,13 +140,7 @@ void variable_replacement(char **line, int *exe_ret)
 						old_line[k] != ' '; k++)
 					;
 				len = k - (j + 1);
-				var = malloc(len + 1);
-				if (!var)
-					return;
-				var[0] = '\0';
-				_strncat(var, &old_line[j + 1], len);
-				replacement = get_env_value(var);
-				free(var);
+				replacement = get_env_value(&old_line[j + 1], len);
 			}
 			new_line = malloc(j + _strlen(replacement)
 					  + _strlen(&old_line[k]) + 1);

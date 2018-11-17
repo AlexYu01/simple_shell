@@ -53,6 +53,9 @@ void free_args(char **args);
 void free_list(list_t *head);
 char *_itoa(int num);
 
+/* Helper functions inside helpers_2.c */
+void handle_line(char **line, ssize_t read);
+
 /* String functions */
 char *_strcat(char *dest, const char *src);
 char *_strncat(char *dest, const char *src, size_t n);
@@ -81,5 +84,4 @@ char *error_2_cd(char *name, int hist, char **args);
 char *error_126(char *name, int hist, char **args);
 char *error_127(char *name, int hist, char **args);
 
-void stuff(char **line, ssize_t read);
 #endif /* _SHELL_H_ */

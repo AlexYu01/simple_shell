@@ -121,6 +121,7 @@ int handle_args(char *name, int *hist, int *exe_ret)
 
 	/* replace \n with \0 */
 	line[read - 1] = '\0';
+	handle_line(&line, read);
 	variable_replacement(&line, exe_ret);
 	args = _strtok(line, " ");
 	free(line);

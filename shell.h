@@ -78,4 +78,5 @@ char *error_2_cd(char *name, int hist, char **args);
 char *error_126(char *name, int hist, char **args);
 char *error_127(char *name, int hist, char **args);
 
+void stuff(char **line, ssize_t read);
 #endif /* _SHELL_H_ */

@@ -16,6 +16,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define END_OF_FILE -2
+#define EXIT -3
+
 extern char **environ;
 
 /**

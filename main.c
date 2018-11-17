@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
 
 	if (!isatty(STDIN_FILENO))
 	{
-		while (ret != -2)
+		while (ret != END_OF_FILE && ret != EXIT)
 			ret = handle_args(name, &hist, exe_ret);
 		free_env();
 		return (*exe_ret);
@@ -189,9 +189,9 @@ int main(int argc, char *argv[])
 	{
 		printf("$ ");
 		ret = handle_args(name, &hist, exe_ret);
-		if (ret == -2 || ret == -3)
+		if (ret == END_OF_FILE || ret == EXIT)
 		{
-			if (ret == -2)
+			if (ret == END_OF_FILE)
 				printf("\n");
 			free_env();
 			exit(*exe_ret);

@@ -179,18 +179,10 @@ int main(int argc, char *argv[])
 
 	if (!isatty(STDIN_FILENO))
 	{
-		/* TODO probably dont have to change ret to *exe_ret */
-		while (ret == 0)
-		{
+		while (ret != -2)
 			ret = handle_args(name, &hist, exe_ret);
-			if (ret == -2)
-			{
-				free_env();
-				return (0);
-			}
-		}
 		free_env();
-		return (ret);
+		return (*exe_ret);
 	}
 
 	while (1)

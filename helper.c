@@ -177,7 +177,7 @@ char *get_pid(void)
 char *get_env_value(char *beginning, int len)
 {
 	char **var_addr;
-	char *replacement, *temp, *var;
+	char *replacement = NULL, *temp, *var;
 
 	var = malloc(len + 1);
 	if (!var)
@@ -194,13 +194,8 @@ char *get_env_value(char *beginning, int len)
 			temp++;
 		temp++;
 		replacement = malloc(_strlen(temp) + 1);
-		if (!replacement)
-			return (NULL);
-		_strcpy(replacement, temp);
-	}
-	else
-	{
-		replacement = NULL;
+		if (replacement)
+			_strcpy(replacement, temp);
 	}
 
 	return (replacement);

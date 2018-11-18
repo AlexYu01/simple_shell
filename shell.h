@@ -48,14 +48,18 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
 char **_strtok(char *line, char *delim);
 char *get_location(char *command);
 list_t *get_path_dir(char *path);
-void variable_replacement(char **args, int *exe_ret);
-void free_args(char **args, char **front);
+int execute(char **args, char **front, char *name, int hist);
 void free_list(list_t *head);
 char *_itoa(int num);
-void stuff(char **line, ssize_t read);
 
-/* Helper functions inside helpers_2.c */
+/* Input Helpers */
 void handle_line(char **line, ssize_t read);
+void variable_replacement(char **args, int *exe_ret);
+char *get_args(char *line, int *exe_ret);
+int call_args(char **args, char **front, char *name, int *hist, int *exe_ret);
+int run_args(char **args, char **front, char *name, int *hist, int *exe_ret);
+int handle_args(char *name, int *hist, int *exe_ret);
+void free_args(char **args, char **front);
 
 /* String functions */
 char *_strcat(char *dest, const char *src);

@@ -1,13 +1,21 @@
+/*
+ * File: helpers_2.c
+ * Auth: Alex Yu
+ *       Brennan D Baraban
+ */
+
 #include "shell.h"
 
 ssize_t get_new_len(char *line);
 void logical_ops(char *line, ssize_t *new_len);
 
 /**
- * handle_line - Insert spaces infront or behind character sequences such as
- * ";", "||", "&&" if needed. Also replaces "#" with '\0' if needed.
- * @line: The pointer to the line that was read.
- * @read: The length of the line.
+ * handle_line - Partitions a line read from standard input as needed.
+ * @line: A pointer to a line read from standard input.
+ * @read: The length of line.
+ *
+ * Description: Spaces are inserted to separate ";", "||", and "&&".
+ *              Replaces "#" with '\0'.
  */
 void handle_line(char **line, ssize_t read)
 {
@@ -72,12 +80,13 @@ void handle_line(char **line, ssize_t read)
 }
 
 /**
- * get_new_len - Gets the new length of the line if spaces need to be inserted
- * infront or behind of ";", "||", "&&". If "#" is encountered the line will
- * be cut short with '\0'.
+ * get_new_len - Gets the new length of a line partitioned
+ *               by ";", "||", "&&&", or "#".
  * @line: The line to check.
  *
- * Return: The new length of the line if the line needs to expanded or shrunk.
+ * Return: The new length of the line.
+ *
+ * Description: Cuts short lines containing '#' comments with '\0'.
  */
 
 ssize_t get_new_len(char *line)
@@ -114,10 +123,9 @@ ssize_t get_new_len(char *line)
 	return (new_len);
 }
 /**
- * logical_ops - Checks for logical ops: "||" or "&&"
- * @line: The line at the current character being checked.
+ * logical_ops - Checks a line for logical operators "||" or "&&".
+ * @line: A pointer to the character to check in the line.
  * @new_len: Pointer to new_len in get_new_len function.
- *
  */
 void logical_ops(char *line, ssize_t *new_len)
 {

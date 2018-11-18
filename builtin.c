@@ -8,7 +8,7 @@
 
 int (*get_builtin(char *command))(char **args, char **front);
 int shellby_exit(char **args, char **front);
-int shellby_cd(char **args, char **front);
+int shellby_cd(char **args, char __attribute__((__unused__)) **front);
 
 /**
  * get_builtin - Matches a command with a corresponding
@@ -67,12 +67,12 @@ int shellby_exit(char **args, char **front)
 			if (args[0][i] >= '0' && args[0][i] <= '9')
 				num = (num * 10) + (args[0][i] - '0');
 			else
-				return (2);
+				return (create_error(args, 2));
 		}
 	}
 	else
 	{
-		return (-3);
+		return (EXIT);
 	}
 	args -= 1;
 	free_args(args, front);
@@ -89,7 +89,7 @@ int shellby_exit(char **args, char **front)
  *         If an error occurs - -1.
  *         Otherwise - 0.
  */
-int shellby_cd(char **args, char **front)
+int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 {
 	char **dir_info;
 	char *oldpwd = NULL, *pwd = NULL;
@@ -111,7 +111,7 @@ int shellby_cd(char **args, char **front)
 			else
 			{
 				free(oldpwd);
-				return (2);
+				return (create_error(args, 2));
 			}
 		}
 	}
@@ -128,12 +128,12 @@ int shellby_cd(char **args, char **front)
 
 	dir_info[0] = "OLDPWD";
 	dir_info[1] = oldpwd;
-	if (shellby_setenv(dir_info, front) == -1)
+	if (shellby_setenv(dir_info, dir_info) == -1)
 		return (-1);
 
 	dir_info[0] = "PWD";
 	dir_info[1] = pwd;
-	if (shellby_setenv(dir_info, front) == -1)
+	if (shellby_setenv(dir_info, dir_info) == -1)
 		return (-1);
 
 	free(oldpwd);

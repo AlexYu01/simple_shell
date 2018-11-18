@@ -8,7 +8,7 @@
 #include <errno.h>
 
 void sig_handler(int sig);
-int execute(char **args, char **front, char *name, int hist);
+int execute(char **args, char **front);
 
 /**
  * sig_handler - Prints a new prompt upon a signal.
@@ -27,13 +27,11 @@ void sig_handler(int sig)
  * execute - Executes a command in a child process.
  * @args: An array of arguments.
  * @front: A double pointer to the beginning of args.
- * @name: The name of the call.
- * @hist: The history number of the call.
  *
  * Return: If an error occurs - a corresponding error code.
  *         O/w - The exit value of the last executed command.
  */
-int execute(char **args, char **front, char *name, int hist)
+int execute(char **args, char **front)
 {
 	pid_t child_pid;
 	int status, flag = 0, ret = 0;
@@ -58,20 +56,20 @@ int execute(char **args, char **front, char *name, int hist)
 		if (!command || (access(command, F_OK) == -1))
 		{
 			if (errno == EACCES)
-				ret = (create_error(name, hist, args, 126));
+				ret = (create_error(args, 126));
 			else
-				ret = (create_error(name, hist, args, 127));
+				ret = (create_error(args, 127));
 			free_env();
 			free_args(args, front);
 			_exit(ret);
 		}
 	/*
 	*	if (access(command, X_OK) == -1)
-	*		return (create_error(name, hist, argv[0], 126));
+	*		return (create_error(argv[0], 126));
 	*/
 		execve(command, args, NULL);
 		if (errno == EACCES)
-			ret = (create_error(name, hist, args, 126));
+			ret = (create_error(args, 126));
 		free_env();
 		free_args(args, front);
 		_exit(ret);
@@ -96,9 +94,11 @@ int execute(char **args, char **front, char *name, int hist)
  */
 int main(int argc, char *argv[])
 {
-	int ret = 0, hist = 1, retn;
+	int ret = 0, retn;
 	int *exe_ret = &retn;
-	char *name = argv[0];
+
+	name = argv[0];
+	hist = 1;
 
 	signal(SIGINT, sig_handler);
 
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 
 	if (argc != 1)
 	{
-		ret = execute(argv + 1, argv + 1, name, hist);
+		ret = execute(argv + 1, argv + 1);
 		free_env();
 		return (ret);
 	}
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
 	if (!isatty(STDIN_FILENO))
 	{
 		while (ret != END_OF_FILE && ret != EXIT)
-			ret = handle_args(name, &hist, exe_ret);
+			ret = handle_args(exe_ret);
 		free_env();
 		return (*exe_ret);
 	}
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		printf("$ ");
-		ret = handle_args(name, &hist, exe_ret);
+		ret = handle_args(exe_ret);
 		if (ret == END_OF_FILE || ret == EXIT)
 		{
 			if (ret == END_OF_FILE)

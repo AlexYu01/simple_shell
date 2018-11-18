@@ -29,7 +29,6 @@ char *get_location(char *command)
 	while (dirs)
 	{
 		temp = malloc(_strlen(dirs->dir) + _strlen(command) + 2);
-
 		if (!temp)
 			return (NULL);
 

@@ -6,7 +6,7 @@
 
 #include "shell.h"
 
-void free_args(char **args);
+void free_args(char **args, char **front);
 char *get_pid(void);
 char *get_env_value(char *beginning, int len);
 void variable_replacement(char **args, int *exe_ret);
@@ -16,13 +16,17 @@ void variable_replacement(char **args, int *exe_ret);
  *
  * @args: A null-terminated double pointer containing commands/arguments.
  */
-void free_args(char **args)
+void free_args(char **args, char **front)
 {
 	size_t i;
 
 	for (i = 0; args[i]; i++)
 		free(args[i]);
-	free(args);
+
+	for (i++; args[i]; i++)
+		free(args[i]);
+
+	free(front);
 }
 
 /**

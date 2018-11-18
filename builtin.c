@@ -6,9 +6,9 @@
 
 #include "shell.h"
 
-int (*get_builtin(char *command))(char **args);
-int shellby_exit(char **args);
-int shellby_cd(char **args);
+int (*get_builtin(char *command))(char **args, char **front);
+int shellby_exit(char **args, char **front);
+int shellby_cd(char **args, char **front);
 
 /**
  * get_builtin - Matches a command with a corresponding
@@ -17,7 +17,7 @@ int shellby_cd(char **args);
  *
  * Return: A function pointer to the corresponding builtin.
  */
-int (*get_builtin(char *command))(char **args)
+int (*get_builtin(char *command))(char **args, char **front)
 {
 	builtin_t funcs[] = {
 		{ "exit", shellby_exit },
@@ -49,7 +49,7 @@ int (*get_builtin(char *command))(char **args)
  *
  * Description: Upon returning -3, the program exits back in the main function.
  */
-int shellby_exit(char **args)
+int shellby_exit(char **args, char **front)
 {
 	int i = 0, sign = 1;
 	unsigned int num = 0;
@@ -74,7 +74,7 @@ int shellby_exit(char **args)
 		return (-3);
 	}
 	args -= 1;
-	free_args(args);
+	free_args(args, front);
 	free_env();
 	exit(num * sign);
 }
@@ -87,7 +87,7 @@ int shellby_exit(char **args)
  *         If an error occurs - -1.
  *         Otherwise - 0.
  */
-int shellby_cd(char **args)
+int shellby_cd(char **args, char **front)
 {
 	char **dir_info;
 	char *oldpwd = NULL, *pwd = NULL;
@@ -126,12 +126,12 @@ int shellby_cd(char **args)
 
 	dir_info[0] = "OLDPWD";
 	dir_info[1] = oldpwd;
-	if (shellby_setenv(dir_info) == -1)
+	if (shellby_setenv(dir_info, front) == -1)
 		return (-1);
 
 	dir_info[0] = "PWD";
 	dir_info[1] = pwd;
-	if (shellby_setenv(dir_info) == -1)
+	if (shellby_setenv(dir_info, front) == -1)
 		return (-1);
 
 	free(oldpwd);

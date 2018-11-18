@@ -40,7 +40,7 @@ typedef struct list_s
 typedef struct builtin_s
 {
 	char *name;
-	int (*f)(char **argv);
+	int (*f)(char **argv, char **front);
 } builtin_t;
 
 /* Helper Functions */
@@ -49,9 +49,10 @@ char **_strtok(char *line, char *delim);
 char *get_location(char *command);
 list_t *get_path_dir(char *path);
 void variable_replacement(char **args, int *exe_ret);
-void free_args(char **args);
+void free_args(char **args, char **front);
 void free_list(list_t *head);
 char *_itoa(int num);
+void stuff(char **line, ssize_t read);
 
 /* Helper functions inside helpers_2.c */
 void handle_line(char **line, ssize_t read);
@@ -64,12 +65,12 @@ int _strlen(const char *s);
 char *_strcpy(char *dest, const char *src);
 
 /* Builtins */
-int (*get_builtin(char *command))(char **args);
-int shellby_exit(char **args);
-int shellby_env(char **args);
-int shellby_setenv(char **args);
-int shellby_unsetenv(char **args);
-int shellby_cd(char **args);
+int (*get_builtin(char *command))(char **args, char **front);
+int shellby_exit(char **args, char __attribute__((__unused__)) **front);
+int shellby_env(char **args, char __attribute__((__unused__)) **front);
+int shellby_setenv(char **args, char __attribute__((__unused__)) **front);
+int shellby_unsetenv(char **args, char __attribute__((__unused__)) **front);
+int shellby_cd(char **args, char **front);
 
 /* Builtin Helpers */
 char **_copyenv(void);

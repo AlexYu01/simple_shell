@@ -1,5 +1,5 @@
 /*
- * File: error_msgs.c
+ * File: err_msgs1.c
  * Auth: Alex Yu
  *       Brennan D Baraban
  */
@@ -7,10 +7,9 @@
 #include "shell.h"
 
 char *error_env(char **args);
+char *error_1(char **args);
 char *error_2_exit(char **args);
 char *error_2_cd(char **args);
-char *error_126(char **args);
-char *error_127(char **args);
 
 /**
  * error_env - Creates an error message for shellby_env errors.
@@ -44,6 +43,29 @@ char *error_env(char **args)
 	_strcat(error, ": Unable to add/remove from environment\n");
 
 	free(hist_str);
+	return (error);
+}
+
+/**
+ * error_1 - Creates an error message for shellby_alias errors.
+ * @args: An array of arguments passed to the command.
+ *
+ * Return: The error string.
+ */
+char *error_1(char **args)
+{
+	char *error;
+	int len;
+
+	len = _strlen(name) + _strlen(args[0]) + 13;
+	error = malloc(sizeof(char) * (len + 1));
+	if (!error)
+		return (NULL);
+
+	_strcpy(error, "alias: ");
+	_strcat(error, args[0]);
+	_strcat(error, " not found\n");
+
 	return (error);
 }
 
@@ -112,74 +134,6 @@ char *error_2_cd(char **args)
 	_strcat(error, ": cd: can't cd to ");
 	_strcat(error, args[0]);
 	_strcat(error, "\n");
-
-	free(hist_str);
-	return (error);
-}
-
-/**
- * error_126 - Creates an error message for permission denied failures.
- * @args: An array of arguments passed to the command.
- *
- * Return: The error string.
- */
-char *error_126(char **args)
-{
-	char *error, *hist_str;
-	int len;
-
-	hist_str = _itoa(hist);
-	if (!hist_str)
-		return (NULL);
-
-	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 24;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
-	{
-		free(hist_str);
-		return (NULL);
-	}
-
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	_strcat(error, ": ");
-	_strcat(error, args[0]);
-	_strcat(error, ": Permission denied\n");
-
-	free(hist_str);
-	return (error);
-}
-
-/**
- * error_127 - Creates an error message for command not found failures.
- * @args: An array of arguments passed to the command.
- *
- * Return: The error string.
- */
-char *error_127(char **args)
-{
-	char *error, *hist_str;
-	int len;
-
-	hist_str = _itoa(hist);
-	if (!hist_str)
-		return (NULL);
-
-	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 16;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
-	{
-		free(hist_str);
-		return (NULL);
-	}
-
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	_strcat(error, ": ");
-	_strcat(error, args[0]);
-	_strcat(error, ": not found\n");
 
 	free(hist_str);
 	return (error);

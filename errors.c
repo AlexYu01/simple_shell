@@ -91,21 +91,24 @@ int create_error(char **args, int err)
 
 	switch (err)
 	{
-		case -1:
-			error = error_env(args);
-			break;
-		case 2:
-			if (*(args[0]) == 'e')
-				error = error_2_exit(args);
-			else
-				error = error_2_cd(args);
-			break;
-		case 126:
-			error = error_126(args);
-			break;
-		case 127:
-			error = error_127(args);
-			break;
+	case -1:
+		error = error_env(args);
+		break;
+	case 1:
+		error = error_1(args);
+		break;
+	case 2:
+		if (*(args[0]) == 'e')
+			error = error_2_exit(args);
+		else
+			error = error_2_cd(args);
+		break;
+	case 126:
+		error = error_126(args);
+		break;
+	case 127:
+		error = error_127(args);
+		break;
 	}
 	write(STDERR_FILENO, error, _strlen(error));
 

@@ -72,7 +72,7 @@ int shellby_exit(char **args, char **front)
 	}
 	else
 	{
-		return (EXIT);
+		return (-3);
 	}
 	args -= 1;
 	free_args(args, front);

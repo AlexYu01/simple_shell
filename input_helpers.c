@@ -153,6 +153,7 @@ int handle_args(int *exe_ret)
 
 	args = _strtok(line, " ");
 	free(line);
+	args = replace_aliases(args);
 	if (!args)
 		return (0);
 	front = args;

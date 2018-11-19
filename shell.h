@@ -62,7 +62,7 @@ typedef struct alias_s
 } alias_t;
 
 /* Global aliases linked list */
-alias_t aliases;
+alias_t *aliases;
 
 /* Main Helpers */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
@@ -81,6 +81,7 @@ int call_args(char **args, char **front, int *exe_ret);
 int run_args(char **args, char **front, int *exe_ret);
 int handle_args(int *exe_ret);
 void free_args(char **args, char **front);
+char **replace_aliases(char **args);
 
 /* String functions */
 int _strlen(const char *s);
@@ -117,7 +118,7 @@ char *error_127(char **args);
 
 /* Linkedlist Helpers */
 alias_t *add_alias_end(alias_t **head, char *name, char *value);
-void free_alias_list(list_t *head);
+void free_alias_list(alias_t *head);
 list_t *add_node_end(list_t **head, char *dir);
 void free_list(list_t *head);
 

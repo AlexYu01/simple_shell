@@ -5,7 +5,6 @@
  */
 
 #include "shell.h"
-
 int (*get_builtin(char *command))(char **args, char **front);
 int shellby_exit(char **args, char **front);
 int shellby_cd(char **args, char __attribute__((__unused__)) **front);
@@ -34,7 +33,7 @@ int (*get_builtin(char *command))(char **args, char **front)
 
 	for (i = 0; funcs[i].name; i++)
 	{
-		if (_strncmp(funcs[i].name, command, _strlen(funcs[i].name)) == 0)
+		if (_strcmp(funcs[i].name, command) == 0)
 			break;
 	}
 	return (funcs[i].f);
@@ -54,18 +53,13 @@ int (*get_builtin(char *command))(char **args, char **front)
  */
 int shellby_exit(char **args, char **front)
 {
-	int i = 0, sign = 1;
-	unsigned int num = 0;
+	int i;
+	unsigned int num = 0, max = 1 << (sizeof(int) * 8 - 1);
 
 	if (args[0])
 	{
-		if (args[0][i] == '-')
-			sign = -1;
 		for (; args[0][i]; i++)
 		{
-			if (args[0][i] == '-')
-				sign *= -1;
-
 			if (args[0][i] >= '0' && args[0][i] <= '9')
 				num = (num * 10) + (args[0][i] - '0');
 			else
@@ -76,11 +70,13 @@ int shellby_exit(char **args, char **front)
 	{
 		return (-3);
 	}
+	if (num > max - 1)
+		return (create_error(--args, 2));
 	args -= 1;
 	free_args(args, front);
 	free_env();
 	free_alias_list(aliases);
-	exit(num * sign);
+	exit(num);
 }
 
 /**
@@ -91,7 +87,6 @@ int shellby_exit(char **args, char **front)
  * Return: If the given string is not a directory - 2.
  *         If an error occurs - -1.
  *         Otherwise - 0.
-
  */
 int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 {

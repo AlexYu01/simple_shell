@@ -76,7 +76,7 @@ Alternatively, an input of end-of-file (\fBCtrl+d\fR) will exit the program.
 .RS
 .B cd
 .RS
-Usage: .B cd [DIRECTORY]	
+Usage: .B cd [DIRECTORY]
 
 Changes the current directory of the process to \fBDIRECTORY\fR.
 

@@ -9,7 +9,6 @@
 int (*get_builtin(char *command))(char **args, char **front);
 int shellby_exit(char **args, char **front);
 int shellby_cd(char **args, char __attribute__((__unused__)) **front);
-int shellby_alias(char **args, char __attribute__((__unused__)) **front);
 
 /**
  * get_builtin - Matches a command with a corresponding
@@ -26,7 +25,7 @@ int (*get_builtin(char *command))(char **args, char **front)
 		{ "setenv", shellby_setenv },
 		{ "unsetenv", shellby_unsetenv },
 		{ "cd", shellby_cd },
-		{ "alias", shelly_alias },
+		{ "alias", shellby_alias },
 		{ NULL, NULL }
 	};
 	int i;
@@ -78,6 +77,7 @@ int shellby_exit(char **args, char **front)
 	args -= 1;
 	free_args(args, front);
 	free_env();
+	free_alias_list(aliases);
 	exit(num * sign);
 }
 
@@ -142,74 +142,4 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 	free(pwd);
 	free(dir_info);
 	return (0);
-}
-
-/**
- * shellby_alias -
- * @args: An array of arguments.
- * @front: A double pointer to the beginning of args.
- *
- * Return: If an error occurs - -1.
- *         Otherwise - 0.
- */
-int shellby_alias(char **args, char __attribute__((__unused__)) **front)
-{
-	alias_t *temp = aliases;
-	int i, j, k, len = 0, ret = 0;
-	char *value;
-
-	if (!args[0])
-	{
-		while(temp)
-		{
-			printf("%s='%s'\n", temp->name, temp->value);
-			temp = temp->next;
-		}
-		return (ret);
-	}
-	for (i = 0; args[i]; i++)
-	{
-		value = _strchar(args[i], "=");
-		if (!value)
-		{
-			while (temp)
-			{
-				if (strcmp(args[i], temp->name) == 0)
-				{
-					printf("%s='%s'\n", temp->name, temp->value);
-					break;
-				}
-			}
-			if (!temp)
-				ret = create_error(args, 1);
-		}
-		else
-		{
-			value = '\0';
-			value++;
-			len = ....;
-			new_value = malloc(sizeof(char) * (len + 1));
-			if (!new_value)
-				continue;
-			for (j = 0, k = 0; value[j]; j++)
-			{
-				if (value[j] != ''' && value[j] != '"')
-					new_value[k++] = value[j];
-			}
-			new_value = '\0';
-			while (temp)
-			{
-				if (strcmp(args[i], temp->name) == 0)
-				{
-					free(temp->value);
-					temp->value = new_value;
-					break;
-				}
-				temp = temp->next;
-			}
-			if (!temp)
-				add_alias_end(head, args[i], new_value);
-		}
-	}
-	return (ret);
 }

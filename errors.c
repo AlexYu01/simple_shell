@@ -99,7 +99,7 @@ int create_error(char **args, int err)
 		break;
 	case 2:
 		if (*(args[0]) == 'e')
-			error = error_2_exit(args);
+			error = error_2_exit(++args);
 		else
 			error = error_2_cd(args);
 		break;

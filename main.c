@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
 	if (argc != 1)
 	{
-		ret = execute(argv + 1, argv + 1);
+		ret = proc_file_commands(argv[1]);
 		free_env();
 		return (ret);
 	}

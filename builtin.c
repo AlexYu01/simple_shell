@@ -69,7 +69,7 @@ int shellby_exit(char **args, char **front)
 			if (args[0][i] >= '0' && args[0][i] <= '9')
 				num = (num * 10) + (args[0][i] - '0');
 			else
-				return (create_error(args, 2));
+				return (create_error(--args, 2));
 		}
 	}
 	else

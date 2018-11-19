@@ -5,7 +5,6 @@
  */
 
 #include "shell.h"
-#include <limits.h>
 int (*get_builtin(char *command))(char **args, char **front);
 int shellby_exit(char **args, char **front);
 int shellby_cd(char **args, char __attribute__((__unused__)) **front);

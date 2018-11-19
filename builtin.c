@@ -87,7 +87,6 @@ int shellby_exit(char **args, char **front)
  * Return: If the given string is not a directory - 2.
  *         If an error occurs - -1.
  *         Otherwise - 0.
-
  */
 int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 {

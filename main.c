@@ -61,6 +61,7 @@ int execute(char **args, char **front)
 				ret = (create_error(args, 127));
 			free_env();
 			free_args(args, front);
+			free_alias_list(aliases);
 			_exit(ret);
 		}
 	/*
@@ -72,6 +73,7 @@ int execute(char **args, char **front)
 			ret = (create_error(args, 126));
 		free_env();
 		free_args(args, front);
+		free_alias_list(aliases);
 		_exit(ret);
 	}
 	else
@@ -99,7 +101,7 @@ int main(int argc, char *argv[])
 
 	name = argv[0];
 	hist = 1;
-
+	aliases = NULL;
 	signal(SIGINT, sig_handler);
 
 	*exe_ret = 0;
@@ -119,6 +121,7 @@ int main(int argc, char *argv[])
 		while (ret != END_OF_FILE && ret != EXIT)
 			ret = handle_args(exe_ret);
 		free_env();
+		free_alias_list(aliases);
 		return (*exe_ret);
 	}
 
@@ -131,10 +134,12 @@ int main(int argc, char *argv[])
 			if (ret == END_OF_FILE)
 				printf("\n");
 			free_env();
+			free_alias_list(aliases);
 			exit(*exe_ret);
 		}
 	}
 
 	free_env();
+	free_alias_list(aliases);
 	return (*exe_ret);
 }

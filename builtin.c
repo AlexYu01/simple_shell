@@ -53,8 +53,8 @@ int (*get_builtin(char *command))(char **args, char **front)
  */
 int shellby_exit(char **args, char **front)
 {
-	int i, max = 1 << (sizeof(int) * 8 - 1);
-	unsigned int num = 0;
+	int i;
+	unsigned int num = 0, max = 1 << (sizeof(int) * 8 - 1);
 
 	if (args[0])
 	{

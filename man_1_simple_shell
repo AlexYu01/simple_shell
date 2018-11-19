@@ -5,95 +5,129 @@
 .B shellby\fR
 .SH DESCRIPTION
 .B Shellby\fR is a simple UNIX command language interpreter that executes commands read from standard input.
-.PP
+
 .B Invocation
-.PP
+.in +2n
 \fBShellby\fR can be invoked both interactively and non-interactively.
 If \fBshellby\fR is invoked with standard input not connected to a terminal, it reads and executes received commands in order.
-.PP
+
 If \fBshellby\fR is invoked with standard input connected to a terminal (determined by \fIisatty(3)\fR), an \fIinteractive\fR shell is opened.
 When executing interactively, \fBshellby\fR displays the prompt \fI$ \fR when it is ready to read a command.
-.PP
+.in
+
+.B Environment
+.in +2n
+Upon invocation, \fBshellby\fR receives and copies the environment of the parent process in which it was exeucted.
+This \fBenvironment\fR is an array of \fIname-value\fR strings describing variables in the format \fINAME=VALUE\fR.
+.in
+
 .B Command Execution
-.PP
+.in +2n
 After receiving a command, \fBshellby\fR tokenizes it into words using \fB" "\fR as a delimiter and takes the following actions:
+
 .RS
-If the command name contains no slashes, the shell searches for it in the list of shell builtins.
+1. If the command name contains no slashes, the shell searches for it in the list of shell builtins.
 If there exists a shell builtin by that name, the builtin is invoked.
-.PP
-If the command name contains no slashes and is not a builtin, \fBshellby\fR searches each element of the 
-\fBPATH\fR environmental variable for a directory containing an executable file by that name.
-.PP
-If the command name contains slashes or either of the above searches is successful, the shell executes the named program with any remaining arguments given in a separate execution environment.
 .RE
-.PP
+
+.RS
+2. If the command name contains no slashes and is not a builtin, \fBshellby\fR searches each element of the
+\fBPATH\fR environmental variable for a directory containing an executable file by that name.
+.RE
+
+.RS
+3. If the command name contains slashes or either of the above searches is successful, the shell executes the named program with any remaining arguments given in a separate execution environment.
+.RE
+
 .B Exit Status
-.PP
+.in +2n
 .B Shellby\fR returns the exit status of the last command executed, unless a syntax error occurs, with zero indicating success and non-zero indicating failure.
-.PP
+
 If a command is not found, the return status is 127; if a command is found but is not executable, the return status is 126.
-.PP
+
 All builtins return zero on success and two on incorrect usage.
-.PP
+.in
+
 .B Signals
-.PP
+.in +2n
 While running in interactive mode, \fBshellby\fR ignores the keyboard input \fBCtrl+c\fR.
 Alternatively, an input of end-of-file (\fBCtrl+d\fR) will exit the program.
-.PP
+.in
+
+.B Variable Replacement
+.in +2n
+.B Shellby\fR inerprets the \fI$\fR character for variable replacement:
+
+.RS
+.B $ENV_VARIABLE\fR	\fIENV_VARIABLE\fR is subsituted with its value.
+.RE
+
+.RS
+.B $?\fR			\fI?\fR is substituted with the return value of the last program executed.
+.RE
+
+.RS
+.B $$\FR			The second \fI$\fR is substituted with the current process ID.
+.RE
+
 .B Shellby Builtin Commands
+.in +2n
+
 .RS
 .B cd
 .RS
 Usage: .B cd [DIRECTORY]
+
 Changes the current directory of the process to \fBDIRECTORY\fR.
-.PP
+
 If no argument is given, the command is interpreted as \fBcd $HOME\fR.
-.PP
+
 If the argument \fB-\fR is given, the command is interpreted as \fBcd $OLDPWD\fR.
-.PP
+
 The environment variables \fBPWD\fR and \fBOLDPWD\fR are updated after a change of directory.
 .RE
-.PP
+
 .B exit
 .RS
 Usage: \fBexit [STATUS]\fR
-.PP
+
 Exits the shell.
-.PP
+
 The \fBSTATUS\fR argument is the integer used to exit the shell.
-.PP
+
 If no argument is given, the command is interpreted as \fBexit 0\fR.
 .RE
-.PP
+
 .B env
 .RS
 Usage: \fBenv\fR
-.PP
+
 Prints the current environment.
 .RE
-.PP
+
 .B setenv
 .RS
 Usage: \fBsetenv [VARIABLE] [VALUE]\fR
-.PP
+
 Initializes a new environment variable, or modifies an existing one.
-.PP
+
 Upon failure, prints a message to \fBstderr\fR
 .RE
-.PP
+
 .B unsetenv
 .RS
 Usage: \fBunsetenv [VARIABLE]\fR
-.PP
+
 Removes an environmental variable.
-.PP
+
 Upon failure, prints a message to \fBstderr\fR.
 .RE
 .RE
-.PP
+.in
+
 .SH SEE ALSO
 access(2), chdir(2), execve(2), _exit(2), exit(3), fork(2), free(3), isatty(3), getcwd(3), sh(1), signal(2), stat(2), wait(2), write(2)
-.PP
+
 .B Shellby\fR emulates basic functionality of the \fBsh\fR shell.
 This man page borrows from the corresponding man page sh(1).
 .SH AUTHOR

@@ -147,6 +147,7 @@ char **replace_aliases(char **args)
 				_strcpy(new_value, temp->value);
 				free(args[i]);
 				args[i] = new_value;
+				i--;
 				break;
 			}
 			temp = temp->next;

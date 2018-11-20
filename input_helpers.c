@@ -1,5 +1,5 @@
 /*
- * File: args_helpers.c
+ * File: input_helpers.c
  * Auth: Alex Yu
  *       Brennan D Baraban
  */

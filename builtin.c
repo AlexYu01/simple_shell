@@ -58,6 +58,11 @@ int shellby_exit(char **args, char **front)
 
 	if (args[0])
 	{
+		if (args[0][0] == '+')
+		{
+			i = 1;
+			len_of_int++;
+		}
 		for (; args[0][i]; i++)
 		{
 			if (i <= len_of_int && args[0][i] >= '0' && args[0][i] <= '9')

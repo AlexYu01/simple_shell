@@ -129,8 +129,8 @@ char **replace_aliases(char **args)
 	int i;
 	char *new_value;
 
-	if (!args)
-		return (NULL);
+	if (_strcmp(args[0], "alias") == 0)
+		return (args);
 	for (i = 0; args[i]; i++)
 	{
 		temp = aliases;

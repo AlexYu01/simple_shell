@@ -67,7 +67,7 @@ int execute(char **args, char **front)
 	*	if (access(command, X_OK) == -1)
 	*		return (create_error(argv[0], 126));
 	*/
-		execve(command, args, NULL);
+		execve(command, args, environ);
 		if (errno == EACCES)
 			ret = (create_error(args, 126));
 		free_env();

@@ -101,9 +101,7 @@ int call_args(char **args, char **front, int *exe_ret)
 		}
 	}
 	args = replace_aliases(args);
-	if (!args[0])
-		ret = run_args(args, front, exe_ret);
-
+	ret = run_args(args, front, exe_ret);
 	return (ret);
 }
 
@@ -121,6 +119,7 @@ int run_args(char **args, char **front, int *exe_ret)
 	int (*builtin)(char **args, char **front);
 
 	builtin = get_builtin(args[0]);
+
 	if (builtin)
 	{
 		ret = builtin(args + 1, front);
@@ -181,8 +180,8 @@ int handle_args(int *exe_ret)
 			index = 0;
 		}
 	}
-
-	ret = call_args(args, front, exe_ret);
+	if (args)
+		ret = call_args(args, front, exe_ret);
 
 	free(front);
 	return (ret);

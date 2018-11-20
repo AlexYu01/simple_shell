@@ -42,45 +42,39 @@ int execute(char **args, char **front)
 		command = get_location(command);
 	}
 
-	child_pid = fork();
-	if (child_pid == -1)
+	if (!command || (access(command, F_OK) == -1))
 	{
-		if (flag)
-			free(command);
-		perror("Error child:");
-		return (1);
+		if (errno == EACCES)
+			ret = (create_error(args, 126));
+		else
+			ret = (create_error(args, 127));
 	}
-	if (child_pid == 0)
+	else
 	{
-		if (!command || (access(command, F_OK) == -1))
+		child_pid = fork();
+		if (child_pid == -1)
 		{
+			if (flag)
+				free(command);
+			perror("Error child:");
+			return (1);
+		}
+		if (child_pid == 0)
+		{
+			execve(command, args, environ);
 			if (errno == EACCES)
 				ret = (create_error(args, 126));
-			else
-				ret = (create_error(args, 127));
 			free_env();
 			free_args(args, front);
 			free_alias_list(aliases);
 			_exit(ret);
 		}
-	/*
-	*	if (access(command, X_OK) == -1)
-	*		return (create_error(argv[0], 126));
-	*/
-		execve(command, args, environ);
-		if (errno == EACCES)
-			ret = (create_error(args, 126));
-		free_env();
-		free_args(args, front);
-		free_alias_list(aliases);
-		_exit(ret);
+		else
+		{
+			wait(&status);
+			ret = WEXITSTATUS(status);
+		}
 	}
-	else
-	{
-		wait(&status);
-		ret = WEXITSTATUS(status);
-	}
-
 	if (flag)
 		free(command);
 	return (ret);

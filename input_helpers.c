@@ -67,6 +67,7 @@ int call_args(char **args, char **front, int *exe_ret)
 		{
 			free(args[index]);
 			args[index] = NULL;
+			args = replace_aliases(args);
 			ret = run_args(args, front, exe_ret);
 			if (*exe_ret != 0)
 			{
@@ -84,6 +85,7 @@ int call_args(char **args, char **front, int *exe_ret)
 		{
 			free(args[index]);
 			args[index] = NULL;
+			args = replace_aliases(args);
 			ret = run_args(args, front, exe_ret);
 			if (*exe_ret == 0)
 			{
@@ -98,8 +100,9 @@ int call_args(char **args, char **front, int *exe_ret)
 			}
 		}
 	}
-
-	ret = run_args(args, front, exe_ret);
+	args = replace_aliases(args);
+	if (!args[0])
+		ret = run_args(args, front, exe_ret);
 
 	return (ret);
 }
@@ -148,7 +151,7 @@ int run_args(char **args, char **front, int *exe_ret)
  */
 int handle_args(int *exe_ret)
 {
-	int ret, index;
+	int ret = 0, index;
 	char **args, *line = NULL, **front;
 
 	line = get_args(line, exe_ret);
@@ -157,9 +160,8 @@ int handle_args(int *exe_ret)
 
 	args = _strtok(line, " ");
 	free(line);
-	args = replace_aliases(args);
 	if (!args)
-		return (0);
+		return (ret);
 	if (check_args(args) != 0)
 	{
 		*exe_ret = 2;

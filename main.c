@@ -5,7 +5,6 @@
  */
 
 #include "shell.h"
-#include <errno.h>
 
 void sig_handler(int sig);
 int execute(char **args, char **front);
@@ -98,6 +97,7 @@ int main(int argc, char *argv[])
 {
 	int ret = 0, retn;
 	int *exe_ret = &retn;
+	char *prompt = "$ ", *new_line = "\n";
 
 	name = argv[0];
 	hist = 1;
@@ -127,12 +127,12 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		printf("$ ");
+		write(STDOUT_FILENO, prompt, 2);
 		ret = handle_args(exe_ret);
 		if (ret == END_OF_FILE || ret == EXIT)
 		{
 			if (ret == END_OF_FILE)
-				printf("\n");
+				write(STDOUT_FILENO, new_line, 1);
 			free_env();
 			free_alias_list(aliases);
 			exit(*exe_ret);

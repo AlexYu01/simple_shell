@@ -90,7 +90,7 @@ int shellby_exit(char **args, char **front)
  */
 int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 {
-	char **dir_info;
+	char **dir_info, *new_line = "\n";
 	char *oldpwd = NULL, *pwd = NULL;
 	struct stat dir;
 
@@ -100,8 +100,14 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 
 	if (args[0])
 	{
-		if (*(args[0]) == '-')
-			chdir(*(_getenv("OLDPWD")) + 7);
+		if (*(args[0]) == '-' || _strcmp(args[0], "--") == 0)
+		{
+			if ((args[0][1] == '-' && args[0][2] == '\0') ||
+					args[0][1] == '\0')
+				chdir(*(_getenv("OLDPWD")) + 7);
+			else
+				return (create_error(args, 2));
+		}
 		else
 		{
 			if (stat(args[0], &dir) == 0 && S_ISDIR(dir.st_mode)
@@ -134,7 +140,11 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 	dir_info[1] = pwd;
 	if (shellby_setenv(dir_info, dir_info) == -1)
 		return (-1);
-
+	if (args[0][0] == '-' && args[0][1] != '-')
+	{
+		write(STDOUT_FILENO, pwd, _strlen(pwd));
+		write(STDOUT_FILENO, new_line, 1);
+	}
 	free(oldpwd);
 	free(pwd);
 	free(dir_info);

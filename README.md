@@ -37,7 +37,7 @@ The previous working directory as set by the **cd** command.
 A colon-separated list of directories in which the shell looks for commands. A null directory name in the path (represented by any of two adjacent colons, an initial colon, or a trailing colon) indicates the current directory.
 
 ### Command Execution
-After receiving a command, **shellby** tokenizes it into words using `" "` as a delimiter. The first word is considered the command with all remaining words considered arguments to that command. **Shellby** then proceeds with the following actions:
+After receiving a command, **shellby** tokenizes it into words using `" "` as a delimiter. The first word is considered the command and all remaining words are considered arguments to that command. **Shellby** then proceeds with the following actions:
 * If the first character of the command is neither a slash (`\`) nor dot (`.`), the shell searches for it in the list of shell builtins. If there exists a builtin by that name, the builtin is invoked.
 * If the first character of the command is none of a slash (`\`), dot (`.`), nor builtin, **shellby** searches each element of the **PATH** environmental variable for a directory containing an executable file by that name.
 * If the first character of the command is a slash (`\`) or dot (`.`) or either of the above searches was successful, the shell executes the named program with any remaining given arguments in a separate execution environment.
@@ -64,7 +64,7 @@ While running in interactive mode, **shellby** ignores the keyboard input `Ctrl+
   * The second `$` is substitued with the current process ID.
 
 ### Comments
-**Shellby** ignores all words and characters preceeded by a `#` symbol on a line.
+**Shellby** ignores all words and characters preceeded by a `#` character on a line.
 
 ### Operators
 **Shellby** specially interprets the following operator characters:
@@ -90,6 +90,7 @@ The operators `&&` and `||` have equal precedence, followed by `;`.
 
 * **alias**
   * Usage: `alias [NAME[='VALUE'] ...]`
+  * Handles aliases.
   * `alias`: Prints a list of all aliases, one per line, in the form `NAME='VALUE'`.
   * `alias NAME [NAME2 ...]`: Prints the aliases `NAME`, `NAME2`, etc. one per line, in the form `NAME='VALUE'`.
   * `alias NAME='VALUE' [...]`: Defines an alias for each `NAME` whose `VALUE` is given. If `name` is already an alias, its value is replaced with `VALUE`.

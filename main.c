@@ -111,9 +111,10 @@ int main(int argc, char *argv[])
 
 	if (argc != 1)
 	{
-		ret = proc_file_commands(argv[1]);
+		ret = proc_file_commands(argv[1], exe_ret);
 		free_env();
-		return (ret);
+		free_alias_list(aliases);
+		return (*exe_ret);
 	}
 
 	if (!isatty(STDIN_FILENO))

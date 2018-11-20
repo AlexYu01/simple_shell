@@ -43,13 +43,23 @@ void handle_line(char **line, ssize_t read)
 			if (current == ';')
 			{
 				if (next == ';' && previous != ' ' && previous != ';')
+				{
 					new_line[j++] = ' ';
+					new_line[j++] = ';';
+					continue;
+				}
 				else if (previous == ';' && next != ' ')
 				{
 					new_line[j++] = ';';
 					new_line[j++] = ' ';
 					continue;
 				}
+				if (previous != ' ')
+					new_line[j++] = ' ';
+				new_line[j++] = ';';
+				if (next != ' ')
+					new_line[j++] = ' ';
+				continue;
 			}
 			else if (current == '&')
 			{
@@ -124,8 +134,18 @@ ssize_t get_new_len(char *line)
 			if (current == ';')
 			{
 				if (next == ';' && line[i - 1] != ' ' && line[i - 1] != ';')
-					new_len++;
+				{
+					new_len += 2;
+					continue;
+				}
 				else if (line[i - 1] == ';' && next != ' ')
+				{
+					new_len += 2;
+					continue;
+				}
+				if (line[i - 1] != ' ')
+					new_len++;
+				if (next != ' ')
 					new_len++;
 			}
 			else

@@ -10,7 +10,7 @@ char *get_args(char *line, int *exe_ret);
 int call_args(char **args, char **front, int *exe_ret);
 int run_args(char **args, char **front, int *exe_ret);
 int handle_args(int *exe_ret);
-
+int check_args(char **args);
 /**
  * get_args - Gets a command from standard input.
  * @line: A buffer to store the command.
@@ -57,6 +57,8 @@ int call_args(char **args, char **front, int *exe_ret)
 {
 	int ret, index;
 
+	if (!args[0])
+		return (*exe_ret);
 	for (index = 0; args[index]; index++)
 	{
 		if (_strncmp(args[index], "||", 2) == 0)
@@ -156,6 +158,12 @@ int handle_args(int *exe_ret)
 	args = replace_aliases(args);
 	if (!args)
 		return (0);
+	if (check_args(args) != 0)
+	{
+		*exe_ret = 2;
+		free_args(args, args);
+		return (*exe_ret);
+	}
 	front = args;
 
 	for (index = 0; args[index]; index++)
@@ -174,4 +182,31 @@ int handle_args(int *exe_ret)
 
 	free(front);
 	return (ret);
+}
+
+/**
+ * check_args - Checks if there are any leading ';', ';;', '&&', or '||'.
+ * @args: 2D pointer to tokenized commands and arguments.
+ *
+ * Return: If a ';', '&&', or '||' is placed at an invalid position - 2.
+ *	   Otherwise - 0.
+ */
+int check_args(char **args)
+{
+	size_t i;
+	char *cur, *nex;
+
+	for (i = 0; args[i]; i++)
+	{
+		cur = args[i];
+		if (cur[0] == ';' || cur[0] == '&' || cur[0] == '|')
+		{
+			if (i == 0 || cur[1] == ';')
+				return (create_error(&args[i], 2));
+			nex = args[i + 1];
+			if (nex && (nex[0] == ';' || nex[0] == '&' || nex[0] == '|'))
+				return (create_error(&args[i + 1], 2));
+		}
+	}
+	return (0);
 }

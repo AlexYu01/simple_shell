@@ -95,7 +95,7 @@ char *error_2_exit(char **args)
 	_strcpy(error, name);
 	_strcat(error, ": ");
 	_strcat(error, hist_str);
-	_strcat(error, ": exit: Illegal Number: ");
+	_strcat(error, ": exit: Illegal number: ");
 	_strcat(error, args[0]);
 	_strcat(error, "\n");
 

@@ -133,13 +133,7 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 	}
 	else
 	{
-		if (_getenv("HOME") == NULL)
-		{
-			write(STDOUT_FILENO, oldpwd,
-			      _strlen(oldpwd));
-			write(STDOUT_FILENO, new_line, 1);
-		}
-		else
+		if (_getenv("HOME") != NULL)
 			chdir(*(_getenv("HOME")) + 5);
 	}
 

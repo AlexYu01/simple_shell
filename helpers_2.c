@@ -89,7 +89,7 @@ void handle_line(char **line, ssize_t read)
 			if (i != 0 && old_line[i - 1] != ' ')
 				new_line[j++] = ' ';
 			new_line[j++] = ';';
-			if (next != ' ')
+			if (next != ' ' && next != ';')
 				new_line[j++] = ' ';
 			continue;
 		}
@@ -155,7 +155,7 @@ ssize_t get_new_len(char *line)
 		{
 			if (i != 0 && line[i - 1] != ' ')
 				new_len++;
-			if (next != ' ')
+			if (next != ' ' && next != ';')
 				new_len++;
 		}
 		new_len++;

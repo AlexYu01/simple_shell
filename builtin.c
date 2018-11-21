@@ -109,7 +109,10 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 		{
 			if ((args[0][1] == '-' && args[0][2] == '\0') ||
 					args[0][1] == '\0')
-				chdir(*(_getenv("OLDPWD")) + 7);
+			{
+				if (_getenv("OLDPWD") != NULL)
+					(chdir(*_getenv("OLDPWD") + 7));
+			}
 			else
 			{
 				free(oldpwd);
@@ -129,7 +132,16 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 		}
 	}
 	else
-		chdir(*(_getenv("HOME")) + 5);
+	{
+		if (_getenv("HOME") == NULL)
+		{
+			write(STDOUT_FILENO, oldpwd,
+			      _strlen(oldpwd));
+			write(STDOUT_FILENO, new_line, 1);
+		}
+		else
+			chdir(*(_getenv("HOME")) + 5);
+	}
 
 	pwd = getcwd(pwd, 0);
 	if (!pwd)

@@ -9,8 +9,10 @@
 int shellby_alias(char **args, char __attribute__((__unused__)) **front);
 void set_alias(char *var_name, char *value);
 void print_alias(alias_t *alias);
+
 /**
- * shellby_alias -
+ * shellby_alias - Builtin command that either prints all aliases, specific
+ * aliases, or sets an alias.
  * @args: An array of arguments.
  * @front: A double pointer to the beginning of args.
  *
@@ -27,7 +29,7 @@ int shellby_alias(char **args, char __attribute__((__unused__)) **front)
 	{
 		while (temp)
 		{
-			printf("%s='%s'\n", temp->name, temp->value);
+			print_alias(temp);
 			temp = temp->next;
 		}
 		return (ret);
@@ -42,7 +44,7 @@ int shellby_alias(char **args, char __attribute__((__unused__)) **front)
 			{
 				if (_strcmp(args[i], temp->name) == 0)
 				{
-					printf("%s='%s'\n", temp->name, temp->value);
+					print_alias(temp);
 					break;
 				}
 				temp = temp->next;
@@ -103,7 +105,7 @@ void print_alias(alias_t *alias)
 	char *alias_string;
 	int len = _strlen(alias->name) + _strlen(alias->value) + 4;
 
-	alias_string = malloc(sizeof(char) * len);
+	alias_string = malloc(sizeof(char) * (len + 1));
 	if (!alias_string)
 		return;
 	_strcpy(alias_string, alias->name);
@@ -115,10 +117,11 @@ void print_alias(alias_t *alias)
 	free(alias_string);
 }
 /**
- * replace_aliases -
+ * replace_aliases - Goes through the arguments and replace any matching alias
+ * with their value.
  * @args: 2D pointer to the arguments.
  *
- * Return:
+ * Return: 2D pointer to the arguments.
  */
 char **replace_aliases(char **args)
 {

@@ -12,9 +12,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
+#include <stdio.h>
 
 #define END_OF_FILE -2
 #define EXIT -3
@@ -97,6 +98,7 @@ char *get_args(char *line, int *exe_ret);
 int call_args(char **args, char **front, int *exe_ret);
 int run_args(char **args, char **front, int *exe_ret);
 int handle_args(int *exe_ret);
+int check_args(char **args);
 void free_args(char **args, char **front);
 char **replace_aliases(char **args);
 
@@ -134,6 +136,7 @@ char *error_env(char **args);
 char *error_1(char **args);
 char *error_2_exit(char **args);
 char *error_2_cd(char **args);
+char *error_2_syntax(char **args);
 char *error_126(char **args);
 char *error_127(char **args);
 

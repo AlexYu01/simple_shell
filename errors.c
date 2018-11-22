@@ -100,6 +100,8 @@ int create_error(char **args, int err)
 	case 2:
 		if (*(args[0]) == 'e')
 			error = error_2_exit(++args);
+		else if (args[0][0] == ';' || args[0][0] == '&' || args[0][0] == '|')
+			error = error_2_syntax(args);
 		else
 			error = error_2_cd(args);
 		break;

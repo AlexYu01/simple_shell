@@ -108,10 +108,12 @@ int main(int argc, char *argv[])
 	environ = _copyenv();
 	if (!environ)
 		exit(-100);
+	init_history();
 
 	if (argc != 1)
 	{
-		ret = proc_file_commands(argv[1]);
+		ret = proc_file_commands(argv[1], exe_ret);
+		save_history();
 		free_env();
 		return (ret);
 	}
@@ -120,6 +122,7 @@ int main(int argc, char *argv[])
 	{
 		while (ret != END_OF_FILE && ret != EXIT)
 			ret = handle_args(exe_ret);
+		save_history();
 		free_env();
 		free_alias_list(aliases);
 		return (*exe_ret);
@@ -132,13 +135,15 @@ int main(int argc, char *argv[])
 		if (ret == END_OF_FILE || ret == EXIT)
 		{
 			if (ret == END_OF_FILE)
-				printf("\n");
+				write(STDOUT_FILENO, new_line, 1);
+			save_history();
 			free_env();
 			free_alias_list(aliases);
 			exit(*exe_ret);
 		}
 	}
 
+	save_history();
 	free_env();
 	free_alias_list(aliases);
 	return (*exe_ret);

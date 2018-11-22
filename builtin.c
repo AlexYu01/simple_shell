@@ -10,6 +10,7 @@ int (*get_builtin(char *command))(char **args, char **front);
 int shellby_exit(char **args, char **front);
 int shellby_cd(char **args, char __attribute__((__unused__)) **front);
 int shellby_help(char **args, char __attribute__((__unused__)) **front);
+int shellby_history(char **args, char __attribute__((__unused__)) **front);
 
 /**
  * get_builtin - Matches a command with a corresponding
@@ -28,6 +29,7 @@ int (*get_builtin(char *command))(char **args, char **front)
 		{ "cd", shellby_cd },
 		{ "alias", shellby_alias },
 		{ "help", shellby_help },
+		{ "history", shellby_history },
 		{ NULL, NULL }
 	};
 	int i;
@@ -54,8 +56,8 @@ int (*get_builtin(char *command))(char **args, char **front)
  */
 int shellby_exit(char **args, char **front)
 {
-	int i = 0, sign = 1;
-	unsigned int num = 0;
+	int i = 0, len_of_int = 10;
+	unsigned int num = 0, max = 1 << (sizeof(int) * 8 - 1);
 
 	if (args[0])
 	{
@@ -73,10 +75,13 @@ int shellby_exit(char **args, char **front)
 		}
 	}
 	else
-	{
 		return (-3);
-	}
+
+	if (num > max - 1)
+		return (create_error(--args, 2));
+
 	args -= 1;
+	save_history();
 	free_args(args, front);
 	free_env();
 	free_alias_list(aliases);
@@ -174,6 +179,53 @@ int shellby_help(char **args, char __attribute__((__unused__)) **front)
 		help_help();
 	else
 		write(STDERR_FILENO, name, _strlen(name));
+
+	return (0);
+}
+
+/**
+ * shellby_history - Displays the history list, one command per line,
+ *                   preceded with line numbers (starting at 0).
+ * @args: An array of arguments.
+ * @front: A pointer to the beginning of args.
+ *
+ * Return: If an error occurs - -1.
+ *         Otherwise - 0.
+ */
+int shellby_history(char **args, char __attribute__((__unused__)) **front)
+{
+	history_t *tmp = history;
+	unsigned int count = 0, shift;
+	char *count_str, *space = " ", *new_line = "\n";
+
+	(void)args;
+
+	while (tmp)
+		tmp = tmp->next;
+
+	tmp = history;
+	if (tmp->count >= 4096)
+	{
+		shift = (count % 4096) + 1;
+		while (shift)
+		{
+			tmp = tmp->next;
+			shift--;
+		}
+	}
+
+	while (tmp)
+	{
+		count_str = _itoa(tmp->count);
+		if (!count_str)
+			return (-1);
+		write(STDOUT_FILENO, count_str, _strlen(count_str));
+		write(STDOUT_FILENO, space, 1);
+		write(STDOUT_FILENO, tmp->command, _strlen(tmp->command));
+		write(STDOUT_FILENO, new_line, 1);
+		tmp = tmp->next;
+		free(count_str);
+	}
 
 	return (0);
 }

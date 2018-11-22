@@ -39,6 +39,7 @@ char *get_args(char *line, int *exe_ret)
 	}
 
 	line[read - 1] = '\0';
+	add_history_end(line);
 	variable_replacement(&line, exe_ret);
 	handle_line(&line, read);
 

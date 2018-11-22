@@ -64,6 +64,22 @@ typedef struct alias_s
 /* Global aliases linked list */
 alias_t *aliases;
 
+/**
+ * struct history_s - A new struct defining a history linked list.
+ * @command: A received command.
+ * @count: The history number of the command.
+ * @next: A pointer to another struct history_s.
+ */
+typedef struct history_s
+{
+	char *command;
+	unsigned int count;
+	struct history_s *next;
+} history_t;
+
+/* Global history linked list */
+history_t *history;
+
 /* Main Helpers */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
@@ -103,11 +119,14 @@ int shellby_unsetenv(char **args, char __attribute__((__unused__)) **front);
 int shellby_cd(char **args, char __attribute__((__unused__)) **front);
 int shellby_alias(char **args, char __attribute__((__unused__)) **front);
 int shellby_help(char **args, char __attribute__((__unused__)) **front);
+int shellby_history(char **args, char __attribute__((__unused__)) **front);
 
 /* Builtin Helpers */
 char **_copyenv(void);
 void free_env(void);
 char **_getenv(const char *var);
+void init_history(void);
+void save_history(void);
 
 /* Error Handling */
 int create_error(char **args, int err);
@@ -123,6 +142,7 @@ alias_t *add_alias_end(alias_t **head, char *name, char *value);
 void free_alias_list(alias_t *head);
 list_t *add_node_end(list_t **head, char *dir);
 void free_list(list_t *head);
+history_t *add_history_end(char *command);
 
 void help_all(void);
 void help_alias(void);
@@ -134,5 +154,6 @@ void help_setenv(void);
 void help_unsetenv(void);
 void help_history(void);
 
-int proc_file_commands(char *file_path);
+int proc_file_commands(char *file_path, int *exe_ret);
+
 #endif /* _SHELL_H_ */
